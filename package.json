@@ -1,0 +1,69 @@
+{
+	"name": "ado-npm-auth-lite",
+	"version": "0.0.0",
+	"description": "Set up local authentication to Azure DevOps npm feeds",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/johnnyreilly/ado-npm-auth-lite"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "John Reilly",
+		"email": "johnny_reilly@hotmail.com"
+	},
+	"type": "module",
+	"main": "./lib/index.js",
+	"bin": "bin",
+	"files": [
+		"bin",
+		"lib/",
+		"package.json",
+		"LICENSE.md",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsup",
+		"format": "prettier .",
+		"lint": "eslint . --max-warnings 0",
+		"prepare": "husky",
+		"test": "vitest",
+		"tsc": "tsc"
+	},
+	"lint-staged": {
+		"*": "prettier --ignore-unknown --write"
+	},
+	"devDependencies": {
+		"@eslint-community/eslint-plugin-eslint-comments": "^4.4.1",
+		"@eslint/js": "^9.14.0",
+		"@release-it/conventional-changelog": "^9.0.2",
+		"@types/eslint__js": "^8.42.3",
+		"@types/node": "^22.8.7",
+		"@vitest/coverage-v8": "^2.1.4",
+		"@vitest/eslint-plugin": "^1.1.7",
+		"console-fail-test": "^0.5.0",
+		"eslint": "^9.14.0",
+		"eslint-plugin-jsdoc": "^50.4.3",
+		"eslint-plugin-n": "^17.12.0",
+		"eslint-plugin-package-json": "^0.15.4",
+		"eslint-plugin-perfectionist": "^3.9.1",
+		"eslint-plugin-regexp": "^2.6.0",
+		"husky": "^9.1.6",
+		"jsonc-eslint-parser": "^2.4.0",
+		"lint-staged": "^15.2.10",
+		"prettier": "^3.3.3",
+		"prettier-plugin-curly": "^0.3.1",
+		"prettier-plugin-packagejson": "^2.5.3",
+		"prettier-plugin-sh": "^0.14.0",
+		"release-it": "^17.10.0",
+		"tsup": "^8.3.5",
+		"typescript": "^5.6.3",
+		"typescript-eslint": "^8.12.2",
+		"vitest": "^2.1.4"
+	},
+	"engines": {
+		"node": ">=18.3.0"
+	},
+	"publishConfig": {
+		"provenance": true
+	}
+}
