@@ -48,36 +48,51 @@ export default tseslint.config(
 			},
 		},
 		rules: {
+			// These on-by-default rules work well for this repo if configured
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{
+					args: "all",
+					argsIgnorePattern: "^_",
+					caughtErrors: "all",
+					caughtErrorsIgnorePattern: "^_",
+					destructuredArrayIgnorePattern: "^_",
+					varsIgnorePattern: "^_",
+					ignoreRestSiblings: true,
+				},
+			],
+			// These on-by-default rules don't work well for this repo and we like them off.
+			"jsdoc/lines-before-block": "off",
+
 			// These off-by-default rules work well for this repo and we like them on.
 			"logical-assignment-operators": [
 				"error",
 				"always",
 				{ enforceForIfStatements: true },
 			],
-			"operator-assignment": "error",
-
-			// These on-by-default rules don't work well for this repo and we like them off.
-			"jsdoc/lines-before-block": "off",
-			"no-constant-condition": "off",
-
-			// These on-by-default rules work well for this repo if configured
-			"@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "all" }],
 			"n/no-unsupported-features/node-builtins": [
 				"error",
 				{ allowExperimental: true },
 			],
-			"perfectionist/sort-objects": [
-				"error",
-				{
-					order: "asc",
-					partitionByComment: true,
-					type: "natural",
-				},
-			],
 
+			"no-constant-condition": "off",
 			// Stylistic concerns that don't interfere with Prettier
 			"no-useless-rename": "error",
 			"object-shorthand": "error",
+			// "perfectionist/sort-objects": [
+			// 	"error",
+			// 	{
+			// 		order: "asc",
+			// 		partitionByComment: true,
+			// 		type: "natural",
+			// 	},
+			// ],
+
+			"operator-assignment": "error",
+			"perfectionist/sort-objects": ["off"],
+			"perfectionist/sort-object-types": ["off"],
+
+			"jsdoc/match-description": "off",
 		},
 	}),
 	{
