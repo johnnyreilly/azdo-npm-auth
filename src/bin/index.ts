@@ -96,8 +96,9 @@ export async function bin(args: string[]) {
 		return StatusCodes.Failure;
 	}
 
-	const pat = await withSpinner(`Creating PAT`, () =>
-		createPat({ logger, organisation: parsedProjectNpmrc.organisation }),
+	const pat = await withSpinner(
+		`Creating Personal Access Token with vso.packaging scope`,
+		() => createPat({ logger, organisation: parsedProjectNpmrc.organisation }),
 	);
 	// const pat = {
 	// 	patToken: {
@@ -143,8 +144,6 @@ export async function bin(args: string[]) {
 
 		return StatusCodes.Failure;
 	}
-
-	prompts.log.info(npmrc);
 
 	prompts.outro(outroPrompts);
 
