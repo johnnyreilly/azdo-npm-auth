@@ -3,8 +3,8 @@
 <p align="center">Set up local authentication to Azure DevOps npm feeds</p>
 
 <p align="center">
+	<a href="https://github.com/johnnyreilly/ado-npm-auth-lite/actions/workflows/release.yml" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://github.com/johnnyreilly/ado-npm-auth-lite/actions/workflows/release.yml/badge.svg" /></a>
 	<a href="https://github.com/johnnyreilly/ado-npm-auth-lite/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
-	<a href="https://codecov.io/gh/johnnyreilly/ado-npm-auth-lite" target="_blank"><img alt="🧪 Coverage" src="https://img.shields.io/codecov/c/github/johnnyreilly/ado-npm-auth-lite?label=%F0%9F%A7%AA%20coverage" /></a>
 	<a href="https://github.com/johnnyreilly/ado-npm-auth-lite/blob/main/LICENSE.md" target="_blank"><img alt="📝 License: MIT" src="https://img.shields.io/badge/%F0%9F%93%9D_license-MIT-21bb42.svg"></a>
 	<a href="http://npmjs.com/package/ado-npm-auth-lite"><img alt="📦 npm version" src="https://img.shields.io/npm/v/ado-npm-auth-lite?color=21bb42&label=%F0%9F%93%A6%20npm" /></a>
 	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
@@ -12,81 +12,51 @@
 
 ## Usage
 
+To use `ado-npm-auth-lite` do this:
+
 ```shell
-npm i ado-npm-auth-lite
+az login
+npx --yes ado-npm-auth-lite --config .npmrc
 ```
 
-```ts
-import { greet } from "ado-npm-auth-lite";
+Typically `ado-npm-auth-lite` will be used as part of a `preinstall` script in your `package.json`:
 
-greet("Hello, world! 💖");
+```json
+"scripts": {
+  "preinstall": "az login && npx --yes ado-npm-auth-lite"
+},
 ```
+
+This will ensure that the necessary authentication is set up before any `npm install` commands are run.
+
+The `az login` command will prompt you to log in to Azure, so that a token may be acquired. It is not necessary to run this command if you are already logged in. The `config` is optional, and if not supplied will default to the `.npmrc` in the project directory. Crucially, `ado-npm-auth-lite` requires the project `.npmrc` in order to operate.
+
+## Why Azure DevOps npm auth-lite?
+
+Azure DevOps provides a mechanism for publishing npm packages for private use. This package sets up the necessary authentication to access those packages; particularly for non Windows users.
+
+Consider the onboarding process for a Windows user:
+
+![screenshot of the onboarding process for Windows users](screenshot-onboarding-with-windows.png)
+
+Now consider the onboarding process for a non Windows user:
+
+![screenshot of the onboarding process for non Windows users](screenshot-onboarding-with-other.png)
+
+This is a significant difference in the onboarding experience. `ado-npm-auth-lite` aims to make the onboarding experience for non Windows users as simple as it is for Windows users.
+
+There is an official package named [`ado-npm-auth`](https://github.com/microsoft/ado-npm-auth). However, due to issues experienced in using that package, this was created.
+
+## Options
+
+`-c` | `--config` (`string`): The location of the .npmrc file. Defaults to current directory
+
+`-e` | `--email` (`string`): Allows users to supply an explicit email - if not supplied, will be inferred from git user.config
+
+`-h` | `--help`: Show help
+
+`-v` | `--version`: Show version
 
 <!-- You can remove this notice if you don't want it 🙂 no worries! -->
 
 > 💙 This package was templated with [`create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app).
-
----
-
-```
-┌  ✨ Welcome to create-typescript-app 1.73.4! ✨
-│
-│  ⚠️ This template is early stage, opinionated, and not endorsed by the TypeScript team. ⚠️
-│  ⚠️ If any tooling it sets displeases you, you can always remove that portion manually. ⚠️
-│
-│  Defaulting to --mode create because the directory contains children and isn't a Git repository.
-│
-◇  What organization or user will the repository be under?
-│  johnnyreilly
-│
-◇  What will the kebab-case name of the repository be?
-│  ado-npm-auth-lite
-│
-◇  ✅ Passed checking GitHub authentication.
-│
-◇  How would you describe the new package?
-│  Set up local authentication to Azure DevOps npm feeds
-│
-◇  What will the Title Case title of the repository be?
-│  Azure DevOps npm auth-lite
-│
-◇  How much tooling would you like the template to set up for you?
-│  prompt        (allow me to customize)
-│
-◇  Select the tooling portions you'd like to remove. All are enabled by default. Press ↑ or ↓ to change the selected item, then space
-to select.
-│  Add a tsup build step to generate built output files., Include eslint-plugin-eslint-comment to enforce good practices around ESLint
-comment directives., Include eslint-plugin-jsdoc to enforce good practices around JSDoc comments., Add eslint-plugin-package-json to
-lint for package.json correctness., Apply eslint-plugin-perfectionist to ensure imports, keys, and so on are in sorted order., Include
-eslint-plugin-regex to enforce good practices around regular expressions., Include strict logical lint rules such as
-typescript-eslint's strict config. , Include stylistic lint rules such as typescript-eslint's stylistic config., Add release-it to
-generate changelogs, package bumps, and publishes based on conventional commits., Add a Renovate config to keep dependencies
-up-to-date with PRs., Add Vitest tooling for fast unit tests, configured with coverage tracking.
-│
-◇  ✅ Passed creating repository structure.
-│
-◇  ✅ Passed installing packages.
-│
-◇  ✅ Passed cleaning up files.
-│
-◇  ✅ Passed clearing any local Git tags.
-│
-◇  ✅ Passed initializing GitHub repository.
-│
-└  Great, looks like the script finished! 🎉
-
-Be sure to:
-
-- enable the GitHub apps:
-   - Codecov (https://github.com/apps/codecov)
-   - Renovate (https://github.com/apps/renovate)
-- populate the secrets:
-   - ACCESS_TOKEN (a GitHub PAT with repo and workflow permissions)
-   - NPM_TOKEN (an npm access token with automation permissions)
-
-See ya! 👋
-
-│
-●  Tip: to run again with the same input values, use: npx create-typescript-app --base prompt --author "John Reilly" --description "Set up local authentication to Azure DevOps npm feeds" --directory ado-npm-auth-lite --email-github johnny_reilly@hotmail.com --email-npm johnny_reilly@hotmail.com --exclude-all-contributors --exclude-compliance --exclude-lint-json --exclude-lint-knip --exclude-lint-md --exclude-lint-packages --exclude-lint-spelling --exclude-lint-yml --mode create --owner johnnyreilly --repository ado-npm-auth-lite --title "Azure DevOps npm auth-lite"
-
-```
