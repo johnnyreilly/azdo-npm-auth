@@ -1,9 +1,11 @@
 import { AzureCliCredential } from "@azure/identity";
 import chalk from "chalk";
+import { fromZodError } from "zod-validation-error";
+
+import type { TokenResult } from "./types.js";
+
 import { fallbackLogger, type Logger } from "./logger.js";
 import { tokenResultSchema } from "./schemas.js";
-import { fromZodError } from "zod-validation-error";
-import type { TokenResult } from "./types.js";
 
 export async function createPat({
 	logger = fallbackLogger,
@@ -51,13 +53,11 @@ export async function createPat({
 		});
 
 		if (!response.ok) {
-			logger.error(`HTTP error! status: ${response.status}`);
+			logger.error(`HTTP error! status: ${response.status.toString()}`);
 			return;
 		}
 
-		const responseData = await response.json();
-
-		const tokenParseResult = tokenResultSchema.safeParse(responseData);
+		const tokenParseResult = tokenResultSchema.safeParse(await response.json());
 
 		if (!tokenParseResult.success) {
 			logger.error(

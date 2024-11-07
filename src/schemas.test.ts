@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { TokenResult } from "./types.js";
+
 import { tokenResultSchema } from "./schemas.js";
 
 describe("schemas", () => {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import type { TokenResult } from "./types.js";
 
 const patTokenSchema = z.object({

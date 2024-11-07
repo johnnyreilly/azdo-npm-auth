@@ -57,7 +57,7 @@ export default tseslint.config(
 					caughtErrors: "all",
 					caughtErrorsIgnorePattern: "^_",
 					destructuredArrayIgnorePattern: "^_",
-					varIgnorePattern: "^_",
+					varsIgnorePattern: "^_",
 					ignoreRestSiblings: true,
 				},
 			],
@@ -91,6 +91,8 @@ export default tseslint.config(
 			"operator-assignment": "error",
 			"perfectionist/sort-objects": ["off"],
 			"perfectionist/sort-object-types": ["off"],
+
+			"jsdoc/match-description": "off",
 		},
 	}),
 	{

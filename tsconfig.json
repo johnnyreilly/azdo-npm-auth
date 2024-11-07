@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"allowJs": true,
 		"declaration": true,
 		"declarationMap": true,
 		"esModuleInterop": true,
@@ -12,5 +13,5 @@
 		"strict": true,
 		"target": "ES2022"
 	},
-	"include": ["src"]
+	"include": ["src", "bin"]
 }

@@ -1,9 +1,9 @@
 export const fallbackLogger: Logger = {
-	info: console.log.bind(console),
 	error: console.error.bind(console),
+	info: console.log.bind(console),
 };
 
 export interface Logger {
-	info: (message: string) => void;
 	error: (message: string) => void;
+	info: (message: string) => void;
 }

@@ -1,6 +1,7 @@
-import os from "node:os";
 import * as fs from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
+
 import { fallbackLogger, type Logger } from "./logger.js";
 
 export async function writeNpmrc({

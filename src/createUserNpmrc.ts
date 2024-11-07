@@ -1,6 +1,4 @@
-import path from "node:path";
-import { readFileSafe } from "./shared/readFileSafe.js";
-import { fallbackLogger, type Logger } from "./logger.js";
+import type { Logger } from "./logger.js";
 import type { ParsedProjectNpmrc } from "./parseProjectNpmrc.js";
 
 /**
@@ -15,17 +13,17 @@ import type { ParsedProjectNpmrc } from "./parseProjectNpmrc.js";
  * //pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/:email=npm requires email to be set but doesn't use the value
  * ; end auth token
  */
-export async function createUserNpmrc({
+export function createUserNpmrc({
 	email = "npm requires email to be set but doesn't use the value",
 	parsedProjectNpmrc,
 	pat,
-	logger = fallbackLogger,
+	// logger = fallbackLogger,
 }: {
 	email?: string | undefined;
 	parsedProjectNpmrc: ParsedProjectNpmrc;
 	logger?: Logger;
 	pat: string;
-}): Promise<string | undefined> {
+}): string | undefined {
 	const base64EncodedPAT = Buffer.from(pat).toString("base64");
 
 	const { urlWithoutRegistryAtEnd, urlWithoutRegistryAtStart, organisation } =

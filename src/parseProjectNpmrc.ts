@@ -1,11 +1,12 @@
 import path from "node:path";
-import { readFileSafe } from "./shared/readFileSafe.js";
+
 import { fallbackLogger, type Logger } from "./logger.js";
+import { readFileSafe } from "./shared/readFileSafe.js";
 
 export interface ParsedProjectNpmrc {
-	urlWithoutRegistryAtStart: string;
-	urlWithoutRegistryAtEnd: string;
 	organisation: string;
+	urlWithoutRegistryAtEnd: string;
+	urlWithoutRegistryAtStart: string;
 }
 
 /**

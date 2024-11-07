@@ -4,10 +4,10 @@ import { parseArgs } from "node:util";
 import { fromZodError } from "zod-validation-error";
 
 import {
-	createUserNpmrc,
 	createPat,
-	writeNpmrc,
+	createUserNpmrc,
 	parseProjectNpmrc,
+	writeNpmrc,
 } from "../index.js";
 import { logLine } from "../shared/cli/lines.js";
 import { withSpinner } from "../shared/cli/spinners.js";
