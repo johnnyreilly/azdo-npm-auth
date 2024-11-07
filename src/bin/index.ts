@@ -113,12 +113,14 @@ export async function bin(args: string[]) {
 	}
 
 	const npmrc = await withSpinner(`Constructing user .npmrc`, () =>
-		createUserNpmrc({
-			parsedProjectNpmrc,
-			email,
-			logger,
-			pat: pat.patToken.token,
-		}),
+		Promise.resolve(
+			createUserNpmrc({
+				parsedProjectNpmrc,
+				email,
+				logger,
+				pat: pat.patToken.token,
+			}),
+		),
 	);
 
 	if (!npmrc) {
