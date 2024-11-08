@@ -12,24 +12,31 @@
 
 ## Usage
 
-You know that you need to create a user `.npmrc` file if you encounter the following message when you try to `npm i`:
+To get `ado-npm-auth-lite` to create the necessary user `.npmrc` file, run the following command:
 
-```sh
+```shell
+npx --yes ado-npm-auth-lite --config .npmrc
+```
+
+Should you encounter the following message when you try to `npm i`:
+
+```shell
 npm error code E401
 npm error Unable to authenticate, your authentication token seems to be invalid.
 npm error To correct this please try logging in again with:
 npm error npm login
 ```
 
-To get `ado-npm-auth-lite` to create the necessary user `.npmrc` file on your behalf, run the following command:
+That means either:
 
-```shell
-npx --yes ado-npm-auth-lite --config .npmrc
-```
+- You have no user `.npmrc` file **OR**
+- The token in your user `.npmrc` file is out of date
 
-This requires that you are authenticated with Azure. To authenticate, run `az login`. [Follow these instructions to install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). The `az login` command will prompt you to log in to Azure, so that a token may be acquired by `ado-npm-auth-lite`. It is not necessary to run `az login` if you are already authenticated with Azure.
+In either case, running `ado-npm-auth-lite` should resolve the issue.
 
-Typically `ado-npm-auth-lite` will be used as part of a `preinstall` script in your `package.json`:
+`ado-npm-auth-lite` requires that you are authenticated with Azure to acquire an Azure DevOps Personal Access Token. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
+
+A great way to use `ado-npm-auth-lite` is as part of a `preinstall` script in your `package.json`:
 
 ```json
 "scripts": {
@@ -37,9 +44,15 @@ Typically `ado-npm-auth-lite` will be used as part of a `preinstall` script in y
 },
 ```
 
-`ado-npm-auth-lite` detects whether it is running in a CI environment and does not create a users `.npmrc` file in that situation. It uses the [ci-info](https://github.com/watson/ci-info) library to achieve this.
+`ado-npm-auth-lite` detects whether it is running in a CI environment and does **not** create a user `.npmrc` file in that case.
 
-The `config` parameter is optional, and if not supplied will default to the `.npmrc` in the project directory. Crucially, `ado-npm-auth-lite` requires the project `.npmrc` file exists in order that it can acquire the information to run.
+`ado-npm-auth-lite` requires the project `.npmrc` file exists in order that it can acquire the information to run. There is an optional `config` parameter; if it is not supplied `ado-npm-auth-lite` will default to use the `.npmrc` in the current project directory. There will be information in your Azure DevOps Artifacts section for connecting to the npm feed around creating a project `.npmrc`. The file will look something like this:
+
+```shell
+registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/
+
+always-auth=true
+```
 
 ## Why Azure DevOps npm auth-lite?
 
