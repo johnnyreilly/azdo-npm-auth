@@ -12,24 +12,34 @@
 
 ## Usage
 
-To use `ado-npm-auth-lite` do this:
+You know that you need to create a user `.npmrc` file if you encounter the following message when you try to `npm i`:
+
+```sh
+npm error code E401
+npm error Unable to authenticate, your authentication token seems to be invalid.
+npm error To correct this please try logging in again with:
+npm error npm login
+```
+
+To get `ado-npm-auth-lite` to create the necessary user `.npmrc` file on your behalf, run the following command:
 
 ```shell
-az login
 npx --yes ado-npm-auth-lite --config .npmrc
 ```
+
+This requires that you are authenticated with Azure. To authenticate, run `az login`. [Follow these instructions to install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). The `az login` command will prompt you to log in to Azure, so that a token may be acquired by `ado-npm-auth-lite`. It is not necessary to run `az login` if you are already authenticated with Azure.
 
 Typically `ado-npm-auth-lite` will be used as part of a `preinstall` script in your `package.json`:
 
 ```json
 "scripts": {
-  "preinstall": "az login && npx --yes ado-npm-auth-lite"
+  "preinstall": "npx --yes ado-npm-auth-lite"
 },
 ```
 
-This will ensure that the necessary authentication is set up before any `npm install` commands are run.
+`ado-npm-auth-lite` detects whether it is running in a CI environment and does not create a users `.npmrc` file in that situation. It uses the [ci-info](https://github.com/watson/ci-info) library to achieve this.
 
-The `az login` command will prompt you to log in to Azure, so that a token may be acquired. It is not necessary to run this command if you are already logged in. The `config` is optional, and if not supplied will default to the `.npmrc` in the project directory. Crucially, `ado-npm-auth-lite` requires the project `.npmrc` in order to operate.
+The `config` parameter is optional, and if not supplied will default to the `.npmrc` in the project directory. Crucially, `ado-npm-auth-lite` requires the project `.npmrc` file exists in order that it can acquire the information to run.
 
 ## Why Azure DevOps npm auth-lite?
 

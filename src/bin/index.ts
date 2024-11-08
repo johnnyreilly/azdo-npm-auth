@@ -1,5 +1,6 @@
 import * as prompts from "@clack/prompts";
 import chalk from "chalk";
+import ci from "ci-info";
 import { parseArgs } from "node:util";
 import { fromZodError } from "zod-validation-error";
 
@@ -27,6 +28,17 @@ export async function bin(args: string[]) {
 
 	const introPrompts = `${chalk.blueBright(`📦🔑 Welcome to`)} ${chalk.bgBlueBright.black(`ado-npm-auth-lite`)} ${chalk.blueBright(`${version}! 📦🔑`)}`;
 	const outroPrompts = `${chalk.blueBright(`📦🔑 Thanks for using`)} ${chalk.bgBlueBright.black(`ado-npm-auth-lite`)} ${chalk.blueBright(`${version}! 📦🔑`)}`;
+
+	if (ci.isCI) {
+		prompts.intro(introPrompts);
+		logLine();
+		logLine(
+			`Detected that you are running on a CI server (${ci.name ?? ""}) and so will not generate a user .npmrc file`,
+		);
+		prompts.outro(outroPrompts);
+
+		return StatusCodes.Success;
+	}
 
 	const { values } = parseArgs({
 		args,
