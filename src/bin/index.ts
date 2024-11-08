@@ -1,5 +1,6 @@
 import * as prompts from "@clack/prompts";
 import chalk from "chalk";
+import ci from "ci-info";
 import { parseArgs } from "node:util";
 import { fromZodError } from "zod-validation-error";
 
@@ -45,7 +46,6 @@ export async function bin(args: string[]) {
 	}
 
 	prompts.intro(introPrompts);
-
 	logLine();
 
 	const mappedOptions = {
@@ -72,6 +72,16 @@ export async function bin(args: string[]) {
 	}
 
 	const { config, email } = optionsParseResult.data;
+
+	// TODO: this will prevent this file from running tests on the server after this - create an override parameter
+	if (ci.isCI) {
+		logLine(
+			`Detected that you are running on a CI server (${ci.name ?? ""}) and so will not generate a user .npmrc file`,
+		);
+		prompts.outro(outroPrompts);
+
+		return StatusCodes.Success;
+	}
 
 	prompts.log.info(`options:
 - config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}
