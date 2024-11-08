@@ -29,17 +29,6 @@ export async function bin(args: string[]) {
 	const introPrompts = `${chalk.blueBright(`📦🔑 Welcome to`)} ${chalk.bgBlueBright.black(`ado-npm-auth-lite`)} ${chalk.blueBright(`${version}! 📦🔑`)}`;
 	const outroPrompts = `${chalk.blueBright(`📦🔑 Thanks for using`)} ${chalk.bgBlueBright.black(`ado-npm-auth-lite`)} ${chalk.blueBright(`${version}! 📦🔑`)}`;
 
-	if (ci.isCI) {
-		prompts.intro(introPrompts);
-		logLine();
-		logLine(
-			`Detected that you are running on a CI server (${ci.name ?? ""}) and so will not generate a user .npmrc file`,
-		);
-		prompts.outro(outroPrompts);
-
-		return StatusCodes.Success;
-	}
-
 	const { values } = parseArgs({
 		args,
 		options,
@@ -57,7 +46,6 @@ export async function bin(args: string[]) {
 	}
 
 	prompts.intro(introPrompts);
-
 	logLine();
 
 	const mappedOptions = {
@@ -84,6 +72,16 @@ export async function bin(args: string[]) {
 	}
 
 	const { config, email } = optionsParseResult.data;
+
+	// TODO: this will prevent this file from running tests on the server after this - create an override parameter
+	if (ci.isCI) {
+		logLine(
+			`Detected that you are running on a CI server (${ci.name ?? ""}) and so will not generate a user .npmrc file`,
+		);
+		prompts.outro(outroPrompts);
+
+		return StatusCodes.Success;
+	}
 
 	prompts.log.info(`options:
 - config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}
