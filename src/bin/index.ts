@@ -49,6 +49,7 @@ export async function bin(args: string[]) {
 	logLine();
 
 	const mappedOptions = {
+		pat: values.pat,
 		config: values.config,
 		email: values.email,
 	};
@@ -71,7 +72,7 @@ export async function bin(args: string[]) {
 		return StatusCodes.Failure;
 	}
 
-	const { config, email } = optionsParseResult.data;
+	const { config, email, pat } = optionsParseResult.data;
 
 	// TODO: this will prevent this file from running tests on the server after this - create an override parameter
 	if (ci.isCI) {
@@ -84,6 +85,7 @@ export async function bin(args: string[]) {
 	}
 
 	prompts.log.info(`options:
+- pat: ${pat ? "supplied" : "[NONE SUPPLIED - WILL ACQUIRE FROM AZURE API]"}
 - config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}
 - email: ${email ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}`);
 
@@ -92,70 +94,52 @@ export async function bin(args: string[]) {
 		error: prompts.log.error,
 	};
 
-	const parsedProjectNpmrc = await withSpinner(`Parsing project .npmrc`, () =>
-		parseProjectNpmrc({
-			config,
-			logger,
-		}),
-	);
-
-	if (!parsedProjectNpmrc) {
-		prompts.cancel(operationMessage("failed"));
-		prompts.outro(outroPrompts);
-
-		return StatusCodes.Failure;
-	}
-
-	const pat = await withSpinner(
-		`Creating Personal Access Token with vso.packaging scope`,
-		() => createPat({ logger, organisation: parsedProjectNpmrc.organisation }),
-	);
-	// const pat = {
-	// 	patToken: {
-	// 		token: "123456",
-	// 	},
-	// };
-
-	if (!pat) {
-		prompts.cancel(operationMessage("failed"));
-		prompts.outro(outroPrompts);
-
-		return StatusCodes.Failure;
-	}
-
-	const npmrc = await withSpinner(`Constructing user .npmrc`, () =>
-		Promise.resolve(
-			createUserNpmrc({
-				parsedProjectNpmrc,
-				email,
+	try {
+		const parsedProjectNpmrc = await withSpinner(`Parsing project .npmrc`, () =>
+			parseProjectNpmrc({
+				config,
 				logger,
-				pat: pat.patToken.token,
 			}),
-		),
-	);
+		);
 
-	if (!npmrc) {
+		const personalAccessToken = pat
+			? {
+					patToken: {
+						token: pat,
+					},
+				}
+			: await withSpinner(`Creating Personal Access Token`, () =>
+					createPat({ logger, organisation: parsedProjectNpmrc.organisation }),
+				);
+
+		const npmrc = await withSpinner(`Constructing user .npmrc`, () =>
+			Promise.resolve(
+				createUserNpmrc({
+					parsedProjectNpmrc,
+					email,
+					logger,
+					pat: personalAccessToken.patToken.token,
+				}),
+			),
+		);
+
+		await withSpinner(`Writing user .npmrc`, () =>
+			writeNpmrc({
+				npmrc,
+				logger,
+			}),
+		);
+
+		prompts.outro(outroPrompts);
+
+		return StatusCodes.Success;
+	} catch (error) {
+		prompts.log.error(
+			`Error: ${error instanceof Error && error.cause instanceof Error ? error.cause.message : ""}`,
+		);
 		prompts.cancel(operationMessage("failed"));
 		prompts.outro(outroPrompts);
 
 		return StatusCodes.Failure;
 	}
-
-	const succeeded = await withSpinner(`Writing user .npmrc`, () =>
-		writeNpmrc({
-			npmrc,
-			logger,
-		}),
-	);
-
-	if (!succeeded) {
-		prompts.cancel(operationMessage("failed"));
-		prompts.outro(outroPrompts);
-
-		return StatusCodes.Failure;
-	}
-
-	prompts.outro(outroPrompts);
-
-	return StatusCodes.Success;
 }

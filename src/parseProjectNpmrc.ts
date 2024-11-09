@@ -18,7 +18,7 @@ export async function parseProjectNpmrc({
 }: {
 	config?: string | undefined;
 	logger?: Logger;
-}): Promise<ParsedProjectNpmrc | undefined> {
+}): Promise<ParsedProjectNpmrc> {
 	const npmrcPath = config
 		? path.resolve(config)
 		: path.resolve(process.cwd(), ".npmrc");
@@ -28,29 +28,32 @@ export async function parseProjectNpmrc({
 	const npmrcContents = await readFileSafe(npmrcPath, "");
 
 	if (!npmrcContents) {
-		logger.error(`No .npmrc found at: ${npmrcPath}`);
-		return;
+		throw new Error(`No .npmrc found at: ${npmrcPath}`);
 	}
 
 	const regex = /^registry=.*$/gm;
 	const match = npmrcContents.match(regex);
 
 	if (!match || match.length === 0) {
-		logger.error(`Unable to extract information from project .npmrc`);
-		return;
+		throw new Error(`Unable to extract information from project .npmrc`);
 	}
 
 	const urlWithoutRegistryAtStart = match[0]
 		.replace("registry=https:", "")
 		.trim();
 	const urlWithoutRegistryAtEnd = urlWithoutRegistryAtStart.replace(
-		/\/registry\/$/,
+		/registry\/$/,
 		"",
 	);
 	// extract the organisation which we will use as the username
 	// not sure why this is the case, but this is the behaviour
 	// defined in ADO
 	const organisation = urlWithoutRegistryAtEnd.split("/")[3];
+
+	logger.info(`Parsed: 
+- organisation: ${organisation}
+- urlWithoutRegistryAtStart: ${urlWithoutRegistryAtStart}
+- urlWithoutRegistryAtEnd: ${urlWithoutRegistryAtEnd}`);
 
 	return { urlWithoutRegistryAtStart, urlWithoutRegistryAtEnd, organisation };
 }

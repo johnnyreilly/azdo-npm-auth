@@ -10,7 +10,7 @@ export async function writeNpmrc({
 }: {
 	npmrc: string;
 	logger?: Logger;
-}): Promise<boolean> {
+}): Promise<void> {
 	// Get the home directory
 	const homeDirectory = os.homedir();
 
@@ -23,11 +23,7 @@ export async function writeNpmrc({
 		// Write the content to the .npmrc file
 		await fs.writeFile(userNpmrcPath, npmrc);
 	} catch (error) {
-		logger.error(
-			`Error writing users .npmrc to ${userNpmrcPath}: ${error instanceof Error ? error.message : ""}`,
-		);
-		return false;
+		const errorMessage = `Error writing users .npmrc to ${userNpmrcPath}: ${error instanceof Error ? error.message : ""}`;
+		throw new Error(errorMessage);
 	}
-
-	return true;
 }
