@@ -1,3 +1,9 @@
+# [0.5.0](https://github.com/johnnyreilly/ado-npm-auth-lite/compare/0.4.0...0.5.0) (2024-11-09)
+
+### Features
+
+- allow manual supplying pat ([#9](https://github.com/johnnyreilly/ado-npm-auth-lite/issues/9)) ([1d7ab17](https://github.com/johnnyreilly/ado-npm-auth-lite/commit/1d7ab170ae23f1e3271fa023c5ab16d617a297d3)), closes [#8](https://github.com/johnnyreilly/ado-npm-auth-lite/issues/8)
+
 # [0.4.0](https://github.com/johnnyreilly/ado-npm-auth-lite/compare/0.3.0...0.4.0) (2024-11-09)
 
 ### Features
