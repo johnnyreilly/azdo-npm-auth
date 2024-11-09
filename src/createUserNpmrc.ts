@@ -23,7 +23,7 @@ export function createUserNpmrc({
 	parsedProjectNpmrc: ParsedProjectNpmrc;
 	logger?: Logger;
 	pat: string;
-}): string | undefined {
+}): string {
 	const base64EncodedPAT = Buffer.from(pat).toString("base64");
 
 	const { urlWithoutRegistryAtEnd, urlWithoutRegistryAtStart, organisation } =

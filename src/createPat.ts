@@ -1,5 +1,4 @@
 import { AzureCliCredential } from "@azure/identity";
-import chalk from "chalk";
 import { fromZodError } from "zod-validation-error";
 
 import type { TokenResult } from "./types.js";
@@ -13,8 +12,10 @@ export async function createPat({
 }: {
 	logger?: Logger;
 	organisation: string;
-}): Promise<TokenResult | undefined> {
+}): Promise<TokenResult> {
 	// const credential = new InteractiveBrowserCredential({});
+	logger.info(`Creating Azure CLI Token`);
+
 	const credential = new AzureCliCredential();
 
 	// get a token that can be used to authenticate to Azure DevOps
@@ -24,6 +25,8 @@ export async function createPat({
 		"499b84ac-1321-427f-aa17-267ca6975798",
 	]);
 
+	logger.info(`Created Azure CLI Token`);
+
 	// Get the current date
 	const currentDate = new Date();
 
@@ -32,6 +35,8 @@ export async function createPat({
 	futureDate.setDate(currentDate.getDate() + 30);
 
 	try {
+		logger.info(`Creating Personal Access Token with scope: vso.packaging`);
+
 		// https://learn.microsoft.com/en-us/rest/api/azure/devops/tokens/pats/create?view=azure-devops-rest-7.1&tabs=HTTP
 		const url = `https://vssps.dev.azure.com/${organisation}/_apis/tokens/pats?api-version=7.1-preview.1`;
 		const data = {
@@ -53,28 +58,30 @@ export async function createPat({
 		});
 
 		if (!response.ok) {
-			logger.error(`HTTP error! status: ${response.status.toString()}`);
-			return;
+			const responseText = await response.text();
+			const errorMessage = `HTTP error! status: ${response.status.toString()} - ${responseText}`;
+			throw new Error(errorMessage);
 		}
 
 		const tokenParseResult = tokenResultSchema.safeParse(await response.json());
 
 		if (!tokenParseResult.success) {
-			logger.error(
-				chalk.red(
-					fromZodError(tokenParseResult.error, {
-						issueSeparator: "\n    - ",
-					}),
-				),
-			);
+			const errorMessage = `Error parsing the token result: ${fromZodError(tokenParseResult.error).message}`;
+			throw new Error(errorMessage);
 		}
 
 		logger.info(`Created Personal Access Token`);
 
 		return tokenParseResult.data;
 	} catch (error) {
-		logger.error(
-			`Error creating Personal Access Token: ${error instanceof Error ? error.message : ""}`,
-		);
+		const errorMessage = `Error creating Personal Access Token: 
+${error instanceof Error ? error.message : JSON.stringify(error)}
+
+Please ensure that:
+1. Your Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID
+2. You are logged into the Azure CLI (use \`az login\` to log in)
+
+If you continue to have issues, consider creating a Personal Access Token with the Packaging read and write scopes manually in Azure DevOps and providing it to \`ado-npm-auth-lite\` using the \`--pat\` option.`;
+		throw new Error(errorMessage);
 	}
 }

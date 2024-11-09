@@ -50,7 +50,7 @@ With the above `preinstall` script in place, when the user performs `npm i` or s
 
 ## Prerequisites
 
-`ado-npm-auth-lite` requires that you are authenticated with Azure to acquire an Azure DevOps Personal Access Token. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
+If you would like `ado-npm-auth-lite` to acquire a token on your behalf, then it requires that your [Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/connect-organization-to-azure-ad?view=azure-devops). Then, assuming you are authenticated with Azure, it can acquire an Azure DevOps Personal Access Token on your behalf. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
 
 You might be worried about `ado-npm-auth-lite` trying to create user `.npmrc` files when running CI builds. Happily this does not happen; it detects whether it is running in a CI environment and does **not** create a user `.npmrc` file in that case.
 
@@ -84,7 +84,9 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 
 `-c` | `--config` (`string`): The location of the .npmrc file. Defaults to current directory
 
-`-e` | `--email` (`string`): Allows users to supply an explicit email - if not supplied, will be inferred from git user.config
+`-e` | `--email` (`string`): Allows users to supply an explicit email - if not supplied, the example ADO value will be used
+
+`-p` | `--pat` (`string`): Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI
 
 `-h` | `--help`: Show help
 

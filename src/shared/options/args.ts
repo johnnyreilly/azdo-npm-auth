@@ -9,6 +9,11 @@ export const options = {
 		type: "string",
 	},
 
+	pat: {
+		short: "p",
+		type: "string",
+	},
+
 	help: {
 		short: "h",
 		type: "boolean",
@@ -43,7 +48,14 @@ export const allArgOptions: Record<ValidOption, DocOption> = {
 	email: {
 		...options.email,
 		description:
-			"Allows users to supply an explicit email - if not supplied, will be inferred from git user.config",
+			"Allows users to supply an explicit email - if not supplied, the example ADO value will be used",
+		docsSection: "optional",
+	},
+
+	pat: {
+		...options.pat,
+		description:
+			"Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI",
 		docsSection: "optional",
 	},
 
