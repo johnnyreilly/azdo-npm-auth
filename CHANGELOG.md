@@ -1,3 +1,9 @@
+# [0.4.0](https://github.com/johnnyreilly/ado-npm-auth-lite/compare/0.3.0...0.4.0) (2024-11-09)
+
+### Features
+
+- logos ([#6](https://github.com/johnnyreilly/ado-npm-auth-lite/issues/6)) ([bab6094](https://github.com/johnnyreilly/ado-npm-auth-lite/commit/bab6094116350ac3d9969572e271b9786a997027)), closes [#7](https://github.com/johnnyreilly/ado-npm-auth-lite/issues/7)
+
 # [0.3.0](https://github.com/johnnyreilly/ado-npm-auth-lite/compare/0.2.0...0.3.0) (2024-11-08)
 
 ### Features
