@@ -1,6 +1,6 @@
-<h1 align="center">Azure DevOps npm auth-lite</h1>
+<p align="center"><img alt="Logo for project" src="ado-npm-auth-lite-logo-small.png" /></p>
 
-<p align="center">Set up local authentication to Azure DevOps npm feeds</p>
+<h1 align="center">Azure DevOps npm auth-lite</h1>
 
 <p align="center">
 	<a href="https://github.com/johnnyreilly/ado-npm-auth-lite/actions/workflows/release.yml" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://github.com/johnnyreilly/ado-npm-auth-lite/actions/workflows/release.yml/badge.svg" /></a>
@@ -9,6 +9,8 @@
 	<a href="http://npmjs.com/package/ado-npm-auth-lite"><img alt="📦 npm version" src="https://img.shields.io/npm/v/ado-npm-auth-lite?color=21bb42&label=%F0%9F%93%A6%20npm" /></a>
 	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
 </p>
+
+Simply set up user authentication to Azure DevOps npm feeds.
 
 ## Usage
 
@@ -58,7 +60,7 @@ always-auth=true
 
 Azure DevOps provides a mechanism for publishing npm packages for private use. This package sets up the necessary authentication to access those packages; particularly for non Windows users.
 
-Consider the onboarding process for a Windows user:
+Consider the onboarding process for a Windows user for consuming an Azure Artifact npm feed:
 
 ![screenshot of the onboarding process for Windows users](screenshot-onboarding-with-windows.png)
 
@@ -66,9 +68,11 @@ Now consider the onboarding process for a non Windows user:
 
 ![screenshot of the onboarding process for non Windows users](screenshot-onboarding-with-other.png)
 
-This is a significant difference in the onboarding experience. `ado-npm-auth-lite` aims to make the onboarding experience for non Windows users as simple as it is for Windows users.
+As we can see, there is a significant difference in the onboarding experience between operating systems. Windows users can use a tool named [`vsts-npm-auth`](https://www.npmjs.com/package/vsts-npm-auth) which automates onboarding. Non windows users have a longer road to follow. The instructions walk through manually creating an `.npmrc` file in a users home directory which contains information including a base 64 encoded Azure DevOps Personal Access Token with the Packaging read and write scopes. It is tedious to do.
 
-There is an official package named [`ado-npm-auth`](https://github.com/microsoft/ado-npm-auth). However, due to issues experienced in using that package, this was created.
+`ado-npm-auth-lite` aims to automate the toil, and make the onboarding experience for non Windows users as simple as it is for Windows users.
+
+There is an official package named [`ado-npm-auth`](https://github.com/microsoft/ado-npm-auth). However, [due to issues I experienced in using the `ado-npm-auth` package](https://github.com/microsoft/ado-npm-auth/issues/50), I found myself creating `ado-npm-auth-lite`. By the way, the "lite" in `ado-npm-auth-lite` doesn't represent anything in particular; I just couldn't think of another good name.
 
 ## Options
 
@@ -80,6 +84,6 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 
 `-v` | `--version`: Show version
 
-<!-- You can remove this notice if you don't want it 🙂 no worries! -->
+## Credits
 
 > 💙 This package was templated with [`create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app).
