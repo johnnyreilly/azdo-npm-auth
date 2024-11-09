@@ -36,7 +36,7 @@ That means either:
 
 In either case, running `ado-npm-auth-lite` should resolve the issue.
 
-`ado-npm-auth-lite` requires that you are authenticated with Azure to acquire an Azure DevOps Personal Access Token. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
+## Integration with `package.json`
 
 A great way to use `ado-npm-auth-lite` is as part of a `preinstall` script in your `package.json`:
 
@@ -46,7 +46,11 @@ A great way to use `ado-npm-auth-lite` is as part of a `preinstall` script in yo
 },
 ```
 
-With the above `preinstall` script in place, when the user performs `npm i` or similar, before attempting to install, the relevant user `.npmrc` file will be put in place so that installation just works™️. This is a **great** developer experience.
+With the above `preinstall` script in place, when the user performs `npm i` or similar, before attempting to install, the relevant user `.npmrc` file will be put in place so that installation for private feed packages just works™️. This is a **great** developer experience.
+
+## Prerequisites
+
+`ado-npm-auth-lite` requires that you are authenticated with Azure to acquire an Azure DevOps Personal Access Token. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
 
 You might be worried about `ado-npm-auth-lite` trying to create user `.npmrc` files when running CI builds. Happily this does not happen; it detects whether it is running in a CI environment and does **not** create a user `.npmrc` file in that case.
 
@@ -57,6 +61,8 @@ registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organiz
 
 always-auth=true
 ```
+
+The content of this file is used to infer the necessary information to create the content of a user `.npmrc` file.
 
 ## Why Azure DevOps npm auth-lite?
 
