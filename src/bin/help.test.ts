@@ -56,7 +56,11 @@ describe("logHelpText", () => {
 			  ],
 			  [
 			    "
-			  -e | --email (string): Allows users to supply an explicit email - if not supplied, will be inferred from git user.config",
+			  -e | --email (string): Allows users to supply an explicit email - if not supplied, the example ADO value will be used",
+			  ],
+			  [
+			    "
+			  -p | --pat (string): Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI",
 			  ],
 			  [],
 			]
