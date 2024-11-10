@@ -1,6 +1,6 @@
 {
 	"name": "ado-npm-auth-lite",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"description": "Set up local authentication to Azure DevOps npm feeds",
 	"repository": {
 		"type": "git",

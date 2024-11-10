@@ -1,3 +1,9 @@
+# [0.6.0](https://github.com/johnnyreilly/ado-npm-auth-lite/compare/0.5.0...0.6.0) (2024-11-10)
+
+### Features
+
+- fallback to using the Azure CLI ([#11](https://github.com/johnnyreilly/ado-npm-auth-lite/issues/11)) ([1e10db2](https://github.com/johnnyreilly/ado-npm-auth-lite/commit/1e10db2c99fab6275dc8ab16c233b7b2d59a955a)), closes [#10](https://github.com/johnnyreilly/ado-npm-auth-lite/issues/10)
+
 # [0.5.0](https://github.com/johnnyreilly/ado-npm-auth-lite/compare/0.4.0...0.5.0) (2024-11-09)
 
 ### Features
