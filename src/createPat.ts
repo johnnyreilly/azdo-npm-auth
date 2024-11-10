@@ -1,4 +1,5 @@
 import { AzureCliCredential } from "@azure/identity";
+import { execa, ExecaError } from "execa";
 import { fromZodError } from "zod-validation-error";
 
 import type { TokenResult } from "./types.js";
@@ -25,8 +26,6 @@ export async function createPat({
 		"499b84ac-1321-427f-aa17-267ca6975798",
 	]);
 
-	logger.info(`Created Azure CLI Token`);
-
 	// Get the current date
 	const currentDate = new Date();
 
@@ -35,8 +34,6 @@ export async function createPat({
 	futureDate.setDate(currentDate.getDate() + 30);
 
 	try {
-		logger.info(`Creating Personal Access Token with scope: vso.packaging`);
-
 		// https://learn.microsoft.com/en-us/rest/api/azure/devops/tokens/pats/create?view=azure-devops-rest-7.1&tabs=HTTP
 		const url = `https://vssps.dev.azure.com/${organisation}/_apis/tokens/pats?api-version=7.1-preview.1`;
 		const data = {
@@ -46,31 +43,35 @@ export async function createPat({
 			allOrgs: false,
 		};
 
-		const response = await fetch(url, {
-			method: "POST",
-			headers: {
-				Authorization: `Bearer ${token.token}`,
-				"X-TFS-FedAuthRedirect": "Suppress",
-				"X-VSS-ForceMsaPassThrough": "True",
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		});
+		let responseText = "";
+		try {
+			responseText = await createPATWithApi({
+				logger,
+				data,
+				url,
+				token: token.token,
+			});
+		} catch (error) {
+			logger.error(
+				`Error creating Personal Access Token with API: ${error instanceof Error ? error.message : ""}`,
+			);
+			logger.info(`Will re-attempt with Azure CLI`);
 
-		if (!response.ok) {
-			const responseText = await response.text();
-			const errorMessage = `HTTP error! status: ${response.status.toString()} - ${responseText}`;
-			throw new Error(errorMessage);
+			responseText = await createPATWithAzCli({
+				logger,
+				data,
+				url,
+			});
 		}
 
-		const tokenParseResult = tokenResultSchema.safeParse(await response.json());
+		const tokenParseResult = tokenResultSchema.safeParse(
+			JSON.parse(responseText),
+		);
 
 		if (!tokenParseResult.success) {
 			const errorMessage = `Error parsing the token result: ${fromZodError(tokenParseResult.error).message}`;
 			throw new Error(errorMessage);
 		}
-
-		logger.info(`Created Personal Access Token`);
 
 		return tokenParseResult.data;
 	} catch (error) {
@@ -81,7 +82,102 @@ Please ensure that:
 1. Your Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID
 2. You are logged into the Azure CLI (use \`az login\` to log in)
 
-If you continue to have issues, consider creating a Personal Access Token with the Packaging read and write scopes manually in Azure DevOps and providing it to \`ado-npm-auth-lite\` using the \`--pat\` option.`;
+If you continue to have issues, consider creating a Personal Access Token with the Packaging read and write scopes manually in Azure DevOps and providing it to \`ado-npm-auth-lite\` using the \`--pat\` option.
+
+You can create a PAT here: https://dev.azure.com/${organisation}/_usersSettings/tokens`;
+		throw new Error(errorMessage);
+	}
+}
+
+interface CreatePATRequestBody {
+	allOrgs: boolean;
+	displayName: string;
+	scope: string;
+	validTo: string;
+}
+
+async function createPATWithApi({
+	logger,
+	data,
+	url,
+	token,
+}: {
+	logger: Logger;
+	data: CreatePATRequestBody;
+	url: string;
+	token: string;
+}) {
+	logger.info(
+		`Creating Personal Access Token with API: ${JSON.stringify(data, null, 2)}`,
+	);
+
+	const response = await fetch(url, {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${token}`,
+			"X-TFS-FedAuthRedirect": "Suppress",
+			"X-VSS-ForceMsaPassThrough": "True",
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(data),
+	});
+
+	if (!response.ok) {
+		const responseText = await response.text();
+		const errorMessage = `HTTP error! status: ${response.status.toString()} - ${responseText}`;
+		throw new Error(errorMessage);
+	}
+
+	logger.info(`Created Personal Access Token with API`);
+
+	return await response.text();
+}
+
+/**
+ * Try to do the same thing with the Azure CLI
+ *
+ * az rest --method post --uri "https://vssps.dev.azure.com/johnnyreilly/_apis/Tokens/Pats?api-version=7.1-preview" --resource "https://management.core.windows.net/" --body '{ "displayName": "patDisplayName", "scope": "vso.packaging" }' --headers Content-Type=application/json
+ *
+ */
+async function createPATWithAzCli({
+	logger,
+	data,
+	url,
+}: {
+	logger: Logger;
+	data: CreatePATRequestBody;
+	url: string;
+}) {
+	logger.info(
+		`Creating Personal Access Token with Azure CLI: ${JSON.stringify(data, null, 2)}`,
+	);
+	try {
+		const { stdout } = await execa("az", [
+			"rest",
+			"--method",
+			"post",
+			"--uri",
+			url,
+			"--resource",
+			"https://management.core.windows.net/",
+			"--body",
+			JSON.stringify(data),
+			"--headers",
+			"Content-Type=application/json",
+		]);
+
+		logger.info(`Created Personal Access Token with Azure CLI`);
+
+		return stdout;
+	} catch (error) {
+		const errorMessage = `AZ CLI error! ${
+			error instanceof ExecaError
+				? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					(error.stderr ?? "") // It's actually a string | undefined
+				: error instanceof Error
+					? error.message
+					: "UNKNOWN ERROR"
+		}`;
 		throw new Error(errorMessage);
 	}
 }

@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import { fallbackLogger, type Logger } from "./logger.js";
 import { readFileSafe } from "./shared/readFileSafe.js";
 
@@ -13,16 +11,12 @@ export interface ParsedProjectNpmrc {
  * Read the project .npmrc file to acquire necessary info
  */
 export async function parseProjectNpmrc({
-	config,
+	npmrcPath,
 	logger = fallbackLogger,
 }: {
-	config?: string | undefined;
+	npmrcPath: string;
 	logger?: Logger;
 }): Promise<ParsedProjectNpmrc> {
-	const npmrcPath = config
-		? path.resolve(config)
-		: path.resolve(process.cwd(), ".npmrc");
-
 	logger.info(`Loading .npmrc at: ${npmrcPath}`);
 
 	const npmrcContents = await readFileSafe(npmrcPath, "");

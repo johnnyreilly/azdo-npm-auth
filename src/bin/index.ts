@@ -1,6 +1,7 @@
 import * as prompts from "@clack/prompts";
 import chalk from "chalk";
 import ci from "ci-info";
+import path from "node:path";
 import { parseArgs } from "node:util";
 import { fromZodError } from "zod-validation-error";
 
@@ -97,7 +98,9 @@ export async function bin(args: string[]) {
 	try {
 		const parsedProjectNpmrc = await withSpinner(`Parsing project .npmrc`, () =>
 			parseProjectNpmrc({
-				config,
+				npmrcPath: config
+					? path.resolve(config)
+					: path.resolve(process.cwd(), ".npmrc"),
 				logger,
 			}),
 		);
