@@ -1,3 +1,9 @@
+# [0.8.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.7.0...0.8.0) (2024-11-11)
+
+### Features
+
+- rename github ado-npm-auth-lite to azdo-npm-auth ([#13](https://github.com/johnnyreilly/azdo-npm-auth/issues/13)) ([a587073](https://github.com/johnnyreilly/azdo-npm-auth/commit/a5870738bf06e49c457ad95f17ae8353cadb8440)), closes [#000](https://github.com/johnnyreilly/azdo-npm-auth/issues/000)
+
 # [0.7.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.6.0...0.7.0) (2024-11-11)
 
 ### Features
