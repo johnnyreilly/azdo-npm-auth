@@ -1,3 +1,9 @@
+# [0.9.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.8.0...0.9.0) (2024-11-11)
+
+### Features
+
+- clarify E401 handling ([#14](https://github.com/johnnyreilly/azdo-npm-auth/issues/14)) ([39dbb1f](https://github.com/johnnyreilly/azdo-npm-auth/commit/39dbb1f2f86fe78960f11036a0a9fb7b70149a07)), closes [#000](https://github.com/johnnyreilly/azdo-npm-auth/issues/000)
+
 # [0.8.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.7.0...0.8.0) (2024-11-11)
 
 ### Features
