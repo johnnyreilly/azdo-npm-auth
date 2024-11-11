@@ -86,7 +86,7 @@ export async function bin(args: string[]) {
 	}
 
 	prompts.log.info(`options:
-- pat: ${pat ? "supplied" : "[NONE SUPPLIED - WILL ACQUIRE FROM AZURE API]"}
+- pat: ${pat ? "supplied" : "[NONE SUPPLIED - WILL ACQUIRE FROM AZURE]"}
 - config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}
 - email: ${email ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}`);
 
