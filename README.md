@@ -17,10 +17,10 @@ Simply set up user authentication to Azure DevOps npm feeds, optionally using th
 To get `azdo-npm-auth` to create the necessary user `.npmrc` file, run the following command:
 
 ```shell
-npx --yes azdo-npm-auth --config .npmrc
+npx cross-env npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
 ```
 
-Should you encounter the following message when you try to `npm i`:
+You might be wondering what the `cross-env npm_config_registry=https://registry.npmjs.org` part is for. It is a way to ensure that the `npx` command uses the **public** npm registry to install `azdo-npm-auth`. Without this, you might encounter an error like below:
 
 ```shell
 npm error code E401
@@ -29,30 +29,94 @@ npm error To correct this please try logging in again with:
 npm error npm login
 ```
 
-That means either:
+The `npx cross-env` at the start is only necessary if you're catering for Windows users that do not use Bash. Otherwise you could simplify to just:
 
-- You have no user `.npmrc` file **OR**
-- The token in your user `.npmrc` file is out of date
+```shell
+npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
+```
 
-In either case, running `azdo-npm-auth` should resolve the issue.
+## Help with `npm error code E401`
+
+When you are attempting to install from private feeds, npm will commonly error out with some form of `npm error code E401`.
+
+This section exists to list some classic errors you might encounter when you try to `npm i`. Regardless of the error, the remedy is generally:
+
+```shell
+npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
+```
+
+### User `.npmrc` not found
+
+When you have no user `.npmrc` file you'll encounter an error like this:
+
+```shell
+npm error code E401
+npm error Unable to authenticate, your authentication token seems to be invalid.
+npm error To correct this please try logging in again with:
+npm error npm login
+```
+
+### Token used in user `.npmrc` file is expired
+
+When your token has expired in your user `.npmrc` file you'll encounter an error like this:
+
+```shell
+npm error code E401
+npm error Incorrect or missing password.
+npm error If you were trying to login, change your password, create an
+npm error authentication token or enable two-factor authentication then
+npm error that means you likely typed your password in incorrectly.
+npm error Please try again, or recover your password at:
+npm error https://www.npmjs.com/forgot
+npm error
+npm error If you were doing some other operation then your saved credentials are
+npm error probably out of date. To correct this please try logging in again with:
+npm error npm login
+```
 
 ## Integration with `package.json`
 
-A great way to use `azdo-npm-auth` is as part of a `preinstall` script in your `package.json`:
+### `preinstall` script
+
+A great way to integrate `azdo-npm-auth` is by using it in a `preinstall` script in your `package.json`:
 
 ```json
 "scripts": {
-  "preinstall": "npx --yes azdo-npm-auth"
+  "preinstall": "npx --yes azdo-npm-auth --config ./subdirectory-with-another-package-json/.npmrc"
 },
 ```
 
-With the above `preinstall` script in place, when the user performs `npm i` or similar, before attempting to install, the relevant user `.npmrc` file will be put in place so that installation for private feed packages just works™️. This is a **great** developer experience.
+The `--yes` flag above skips having npm challenge the user as to whether to download the package; useful in a CI environment.
+
+However, as you're probably noticing, this requires having multiple `package.json`s and only having the `.npmrc` file in the nested one. Assuming that works for you, brilliant. It may not - don't worry. We'll talk about that in a second.
+
+In case you're wondering, the below **won't** work:
+
+```json
+"scripts": {
+  "preinstall": "npm_config_registry=https://registry.npmjs.org npx --yes azdo-npm-auth"
+},
+```
+
+Alas, it is not possible to get the `preinstall` script to ignore the project `.npmrc` file when it runs. As a consequence the `preinstall` script results in a `npm error code E401` and much sadness.
+
+### `auth` script
+
+Instead, we generally advise setting up a script like the one below:
+
+```json
+"scripts": {
+  "auth": "npm_config_registry=https://registry.npmjs.org npx --yes azdo-npm-auth"
+},
+```
+
+And using `npm run auth` when a `npm error code E401` is encountered. We've called this script `auth` for the example - you can choose any name you like.
 
 ## Prerequisites
 
 If you would like `azdo-npm-auth` to acquire a token on your behalf, then it requires that your [Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/connect-organization-to-azure-ad?view=azure-devops). Then, assuming you are authenticated with Azure, it can acquire an Azure DevOps Personal Access Token on your behalf. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
 
-You might be worried about `azdo-npm-auth` trying to create user `.npmrc` files when running CI builds. Happily this does not happen; it detects whether it is running in a CI environment and does **not** create a user `.npmrc` file in that case.
+If you would like to acquire a PAT token manually, there is a `--pat` option for that very circumstance.
 
 `azdo-npm-auth` requires the project `.npmrc` file exists in order that it can acquire the information to create the content of a user `.npmrc` file. There is an optional `config` parameter; if it is not supplied `azdo-npm-auth` will default to use the `.npmrc` in the current project directory. There will be instructions for creating a project `.npmrc` file in Azure DevOps, for connecting to the Azure Artifacts npm feed. A project `.npmrc` file will look something like this:
 
@@ -61,6 +125,10 @@ registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organiz
 
 always-auth=true
 ```
+
+## What about CI?
+
+You might be worried about `azdo-npm-auth` trying to create user `.npmrc` files when running CI builds. Happily this does not happen; it detects whether it is running in a CI environment and does **not** create a user `.npmrc` file in that case.
 
 ## Why Azure DevOps npm auth?
 
@@ -78,7 +146,7 @@ As we can see, there is a significant difference in the onboarding experience be
 
 `azdo-npm-auth` aims to automate the toil, and make the onboarding experience for non Windows users as simple as it is for Windows users.
 
-There is an official package named [`ado-npm-auth`](https://github.com/microsoft/ado-npm-auth). However, [due to issues I experienced in using the `ado-npm-auth` package](https://github.com/microsoft/ado-npm-auth/issues/50), I found myself creating `azdo-npm-auth`. By the way, the "lite" in `azdo-npm-auth` doesn't represent anything in particular; I just couldn't think of another good name.
+There is an official package named [`ado-npm-auth`](https://github.com/microsoft/ado-npm-auth). However, [due to issues I experienced in using the `ado-npm-auth` package](https://github.com/microsoft/ado-npm-auth/issues/50), I found myself creating `azdo-npm-auth`.
 
 ## Options
 
