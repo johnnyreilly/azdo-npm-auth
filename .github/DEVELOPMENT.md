@@ -3,8 +3,8 @@
 After [forking the repo from GitHub](https://help.github.com/articles/fork-a-repo) and [installing pnpm](https://pnpm.io/installation):
 
 ```shell
-git clone https://github.com/ < your-name-here > /ado-npm-auth-lite
-cd ado-npm-auth-lite
+git clone https://github.com/ < your-name-here > /azdo-npm-auth
+cd azdo-npm-auth
 pnpm install
 ```
 

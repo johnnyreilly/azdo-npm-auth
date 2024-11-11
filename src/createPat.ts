@@ -37,7 +37,7 @@ export async function createPat({
 		// https://learn.microsoft.com/en-us/rest/api/azure/devops/tokens/pats/create?view=azure-devops-rest-7.1&tabs=HTTP
 		const url = `https://vssps.dev.azure.com/${organisation}/_apis/tokens/pats?api-version=7.1-preview.1`;
 		const data = {
-			displayName: `made by ado-npm-auth-lite at: ${new Date().toISOString()}`,
+			displayName: `made by azdo-npm-auth at: ${new Date().toISOString()}`,
 			scope: "vso.packaging",
 			validTo: futureDate.toISOString(),
 			allOrgs: false,
@@ -82,7 +82,7 @@ Please ensure that:
 1. Your Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID
 2. You are logged into the Azure CLI (use \`az login\` to log in)
 
-If you continue to have issues, consider creating a Personal Access Token with the Packaging read and write scopes manually in Azure DevOps and providing it to \`ado-npm-auth-lite\` using the \`--pat\` option.
+If you continue to have issues, consider creating a Personal Access Token with the Packaging read and write scopes manually in Azure DevOps and providing it to \`azdo-npm-auth\` using the \`--pat\` option.
 
 You can create a PAT here: https://dev.azure.com/${organisation}/_usersSettings/tokens`;
 		throw new Error(errorMessage);

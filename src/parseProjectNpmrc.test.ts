@@ -16,7 +16,7 @@ describe("parseProjectNpmrc", () => {
                         
 always-auth=true`);
 		const result = await parseProjectNpmrc({
-			npmrcPath: "/home/john/code/github/ado-npm-auth-lite/.npmrc",
+			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
 		expect(result).toEqual({
 			organisation: "johnnyreilly",
@@ -31,7 +31,7 @@ always-auth=true`);
 		mockReadFile.mockResolvedValue(`stuff`);
 		await expect(() =>
 			parseProjectNpmrc({
-				npmrcPath: "/home/john/code/github/ado-npm-auth-lite/.npmrc",
+				npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 			}),
 		).rejects.toThrowError("Unable to extract information from project .npmrc");
 	});

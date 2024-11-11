@@ -14,8 +14,8 @@ jobs:
 
             The release is available on:
 
-            * [GitHub releases](https://github.com/johnnyreilly/ado-npm-auth-lite/releases/tag/{release_tag})
-            * [npm package (@latest dist-tag)](https://www.npmjs.com/package/ado-npm-auth-lite/v/${{ env.npm_version }})
+            * [GitHub releases](https://github.com/johnnyreilly/azdo-npm-auth/releases/tag/{release_tag})
+            * [npm package (@latest dist-tag)](https://www.npmjs.com/package/azdo-npm-auth/v/${{ env.npm_version }})
 
             Cheers! 📦🚀
 

@@ -4,7 +4,7 @@
 	"description": "Set up local authentication to Azure DevOps npm feeds",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/johnnyreilly/ado-npm-auth-lite"
+		"url": "https://github.com/johnnyreilly/azdo-npm-auth"
 	},
 	"license": "MIT",
 	"author": {
