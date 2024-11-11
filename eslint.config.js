@@ -107,7 +107,7 @@ export default tseslint.config(
 		extends: [tseslint.configs.disableTypeChecked],
 		files: ["**/*.md/*.ts"],
 		rules: {
-			"n/no-missing-import": ["error", { allowModules: ["ado-npm-auth-lite"] }],
+			"n/no-missing-import": ["error", { allowModules: ["azdo-npm-auth"] }],
 		},
 	},
 	{

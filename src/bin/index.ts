@@ -27,8 +27,8 @@ export async function bin(args: string[]) {
 
 	const version = await getVersionFromPackageJson();
 
-	const introPrompts = `${chalk.blueBright(`📦🔑 Welcome to`)} ${chalk.bgBlueBright.black(`ado-npm-auth-lite`)} ${chalk.blueBright(`${version}! 📦🔑`)}`;
-	const outroPrompts = `${chalk.blueBright(`📦🔑 Thanks for using`)} ${chalk.bgBlueBright.black(`ado-npm-auth-lite`)} ${chalk.blueBright(`${version}! 📦🔑`)}`;
+	const introPrompts = `${chalk.blueBright(`📦🔑 Welcome to`)} ${chalk.bgBlueBright.black(`azdo-npm-auth`)} ${chalk.blueBright(`${version}! 📦🔑`)}`;
+	const outroPrompts = `${chalk.blueBright(`📦🔑 Thanks for using`)} ${chalk.bgBlueBright.black(`azdo-npm-auth`)} ${chalk.blueBright(`${version}! 📦🔑`)}`;
 
 	const { values } = parseArgs({
 		args,
