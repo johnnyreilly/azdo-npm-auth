@@ -10,9 +10,11 @@ import { tokenResultSchema } from "./schemas.js";
 export async function createPat({
 	logger = fallbackLogger,
 	organisation,
+	daysToExpiry,
 }: {
 	logger?: Logger;
 	organisation: string;
+	daysToExpiry?: number;
 }): Promise<TokenResult> {
 	// const credential = new InteractiveBrowserCredential({});
 	logger.info(`Creating Azure CLI Token`);
@@ -27,11 +29,7 @@ export async function createPat({
 	]);
 
 	// Get the current date
-	const currentDate = new Date();
-
-	// Add 30 days to the current date
-	const futureDate = new Date(currentDate);
-	futureDate.setDate(currentDate.getDate() + 30);
+	const validTo = computeTokenExpiry(daysToExpiry);
 
 	try {
 		// https://learn.microsoft.com/en-us/rest/api/azure/devops/tokens/pats/create?view=azure-devops-rest-7.1&tabs=HTTP
@@ -39,8 +37,8 @@ export async function createPat({
 		const data = {
 			displayName: `made by azdo-npm-auth at: ${new Date().toISOString()}`,
 			scope: "vso.packaging",
-			validTo: futureDate.toISOString(),
 			allOrgs: false,
+			...(validTo && { validTo: validTo.toISOString() }),
 		};
 
 		let responseText = "";
@@ -73,6 +71,11 @@ export async function createPat({
 			throw new Error(errorMessage);
 		}
 
+		logger.info(`Personal Access Token created:
+- name: ${tokenParseResult.data.patToken.displayName}
+- scope: ${tokenParseResult.data.patToken.scope}
+- validTo: ${tokenParseResult.data.patToken.validTo}`);
+
 		return tokenParseResult.data;
 	} catch (error) {
 		const errorMessage = `Error creating Personal Access Token: 
@@ -89,11 +92,23 @@ You can create a PAT here: https://dev.azure.com/${organisation}/_usersSettings/
 	}
 }
 
+function computeTokenExpiry(daysToExpiry: number | undefined) {
+	if (!daysToExpiry) {
+		return undefined;
+	}
+
+	const currentDate = new Date();
+	const futureDate = new Date(currentDate);
+	futureDate.setDate(currentDate.getDate() + daysToExpiry);
+
+	return futureDate;
+}
+
 interface CreatePATRequestBody {
 	allOrgs: boolean;
 	displayName: string;
 	scope: string;
-	validTo: string;
+	validTo?: string;
 }
 
 async function createPATWithApi({

@@ -53,6 +53,7 @@ export async function bin(args: string[]) {
 		pat: values.pat,
 		config: values.config,
 		email: values.email,
+		daysToExpiry: values.daysToExpiry ? Number(values.daysToExpiry) : undefined,
 	};
 
 	const optionsParseResult = optionsSchema.safeParse(mappedOptions);
@@ -73,7 +74,7 @@ export async function bin(args: string[]) {
 		return StatusCodes.Failure;
 	}
 
-	const { config, email, pat } = optionsParseResult.data;
+	const { config, email, pat, daysToExpiry } = optionsParseResult.data;
 
 	// TODO: this will prevent this file from running tests on the server after this - create an override parameter
 	if (ci.isCI) {
@@ -87,8 +88,9 @@ export async function bin(args: string[]) {
 
 	prompts.log.info(`options:
 - pat: ${pat ? "supplied" : "[NONE SUPPLIED - WILL ACQUIRE FROM AZURE]"}
-- config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}
-- email: ${email ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}`);
+- config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT LOCATION]"}
+- email: ${email ?? "[NONE SUPPLIED - WILL USE DEFAULT VALUE]"}
+- daysToExpiry: ${daysToExpiry ? daysToExpiry.toLocaleString() : "[NONE SUPPLIED - API WILL DETERMINE EXPIRY]"}`);
 
 	const logger = {
 		info: prompts.log.info,
@@ -112,7 +114,11 @@ export async function bin(args: string[]) {
 					},
 				}
 			: await withSpinner(`Creating Personal Access Token`, () =>
-					createPat({ logger, organisation: parsedProjectNpmrc.organisation }),
+					createPat({
+						logger,
+						organisation: parsedProjectNpmrc.organisation,
+						daysToExpiry,
+					}),
 				);
 
 		const npmrc = await withSpinner(`Constructing user .npmrc`, () =>

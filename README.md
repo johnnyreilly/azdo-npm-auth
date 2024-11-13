@@ -76,21 +76,23 @@ npm error npm login
 
 ## Integration with `package.json`
 
-### `preinstall` script
+### Custom npm script
 
-A great way to integrate `azdo-npm-auth` is by using it in a `preinstall` script in your `package.json`:
+We generally advise setting up a custom npm script like the one below:
 
 ```json
 "scripts": {
-  "preinstall": "npx --yes azdo-npm-auth --config ./subdirectory-with-another-package-json/.npmrc"
+  "auth": "npm_config_registry=https://registry.npmjs.org npx --yes azdo-npm-auth"
 },
 ```
 
-The `--yes` flag above skips having npm challenge the user as to whether to download the package; useful in a CI environment.
+Users should `npm run auth` when a `npm error code E401` is encountered. We've called this script `auth` - you can choose any name you like.
 
-However, as you're probably noticing, this requires having multiple `package.json`s and only having the `.npmrc` file in the nested one. Assuming that works for you, brilliant. It may not - don't worry. We'll talk about that in a second.
+You might be wondering why we do not recommend using a `preinstall` script. It's possible but there are gotchas. Read on.
 
-In case you're wondering, the below **won't** work:
+### `preinstall` script
+
+First the bad news. The below **won't** work:
 
 ```json
 "scripts": {
@@ -100,17 +102,17 @@ In case you're wondering, the below **won't** work:
 
 Alas, it is not possible to get the `preinstall` script to ignore the project `.npmrc` file when it runs. As a consequence the `preinstall` script results in a `npm error code E401` and much sadness.
 
-### `auth` script
-
-Instead, we generally advise setting up a script like the one below:
+It is still possible to integrate `azdo-npm-auth` in a `preinstall` script in your `package.json`:
 
 ```json
 "scripts": {
-  "auth": "npm_config_registry=https://registry.npmjs.org npx --yes azdo-npm-auth"
+  "preinstall": "npx --yes azdo-npm-auth --config ./subdirectory-with-another-package-json/.npmrc"
 },
 ```
 
-And using `npm run auth` when a `npm error code E401` is encountered. We've called this script `auth` for the example - you can choose any name you like.
+The `--yes` flag above skips having npm challenge the user as to whether to download the package; useful in a CI environment.
+
+However, as you're probably noticing, this approach requires having multiple `package.json`s and only having the `.npmrc` file in the nested one. Assuming that works for you, brilliant. It may not - don't worry. We'll talk about that in a second.
 
 ## Prerequisites
 
@@ -153,6 +155,8 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 `-c` | `--config` (`string`): The location of the .npmrc file. Defaults to current directory
 
 `-e` | `--email` (`string`): Allows users to supply an explicit email - if not supplied, the example ADO value will be used
+
+`-d` | `--daysToExpiry` (`number`): Allows users to supply an explicit number of days to expiry - if not supplied, then ADO will determine the expiry date
 
 `-p` | `--pat` (`string`): Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI
 
