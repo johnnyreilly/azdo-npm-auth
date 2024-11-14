@@ -17,10 +17,10 @@ Simply set up user authentication to Azure DevOps npm feeds, optionally using th
 To get `azdo-npm-auth` to create the necessary user `.npmrc` file, run the following command:
 
 ```shell
-npx cross-env npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
+npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
 ```
 
-You might be wondering what the `cross-env npm_config_registry=https://registry.npmjs.org` part is for. It is a way to ensure that the `npx` command uses the **public** npm registry to install `azdo-npm-auth`. Without this, you might encounter an error like below:
+You might be wondering what the `npm_config_registry=https://registry.npmjs.org` part is for. It is a way to ensure that the `npx` command uses the **public** npm registry to install `azdo-npm-auth`. Without this, you might encounter an error like below:
 
 ```shell
 npm error code E401
@@ -29,10 +29,10 @@ npm error To correct this please try logging in again with:
 npm error npm login
 ```
 
-The `npx cross-env` at the start is only necessary if you're catering for Windows users that do not use Bash. Otherwise you could simplify to just:
+If you're catering for Windows users that do not use Bash then you might need to introduce a `npx cross-env` prefix:
 
 ```shell
-npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
+npx cross-env npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
 ```
 
 ## Help with `npm error code E401`
