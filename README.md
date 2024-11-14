@@ -67,7 +67,7 @@ It is still possible to integrate `azdo-npm-auth` in a `preinstall` script in yo
 
 ```json
 "scripts": {
-  "preinstall": "npx --yes azdo-npm-auth --config ./subdirectory-with-another-package-json/.npmrc"
+  "preinstall": "npx --yes azdo-npm-auth --config ./subdir-with-package-json/.npmrc"
 },
 ```
 
