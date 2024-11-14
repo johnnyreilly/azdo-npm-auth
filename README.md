@@ -35,45 +35,6 @@ If you're catering for Windows users that do not use Bash then you might need to
 npx cross-env npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
 ```
 
-## Help with `npm error code E401`
-
-When you are attempting to install from private feeds, npm will commonly error out with some form of `npm error code E401`.
-
-This section exists to list some classic errors you might encounter when you try to `npm i`. Regardless of the error, the remedy is generally:
-
-```shell
-npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
-```
-
-### User `.npmrc` not found
-
-When you have no user `.npmrc` file you'll encounter an error like this:
-
-```shell
-npm error code E401
-npm error Unable to authenticate, your authentication token seems to be invalid.
-npm error To correct this please try logging in again with:
-npm error npm login
-```
-
-### Token used in user `.npmrc` file is expired
-
-When your token has expired in your user `.npmrc` file you'll encounter an error like this:
-
-```shell
-npm error code E401
-npm error Incorrect or missing password.
-npm error If you were trying to login, change your password, create an
-npm error authentication token or enable two-factor authentication then
-npm error that means you likely typed your password in incorrectly.
-npm error Please try again, or recover your password at:
-npm error https://www.npmjs.com/forgot
-npm error
-npm error If you were doing some other operation then your saved credentials are
-npm error probably out of date. To correct this please try logging in again with:
-npm error npm login
-```
-
 ## Integration with `package.json`
 
 ### Custom npm script
@@ -100,7 +61,7 @@ First the bad news. The below **won't** work:
 },
 ```
 
-Alas, it is not possible to get the `preinstall` script to ignore the project `.npmrc` file when it runs. As a consequence the `preinstall` script results in a `npm error code E401` and much sadness.
+Alas, it is not possible to get the `preinstall` script to ignore the project `.npmrc` file when it runs. As a consequence the `preinstall` script results in a `npm error code E401` and much sadness. Read more about E401s [here](#help-with-npm-error-code-e401).
 
 It is still possible to integrate `azdo-npm-auth` in a `preinstall` script in your `package.json`:
 
@@ -110,15 +71,15 @@ It is still possible to integrate `azdo-npm-auth` in a `preinstall` script in yo
 },
 ```
 
-The `--yes` flag above skips having npm challenge the user as to whether to download the package; useful in a CI environment.
-
 However, as you're probably noticing, this approach requires having multiple `package.json`s and only having the `.npmrc` file in the nested one. Assuming that works for you, brilliant. It may not - don't worry. We'll talk about that in a second.
+
+The `--yes` flag above skips having npm challenge the user as to whether to download the package; useful in a CI environment.
 
 ## Prerequisites
 
 If you would like `azdo-npm-auth` to acquire a token on your behalf, then it requires that your [Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/connect-organization-to-azure-ad?view=azure-devops). Then, assuming you are authenticated with Azure, it can acquire an Azure DevOps Personal Access Token on your behalf. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
 
-If you would like to acquire a PAT token manually, there is a `--pat` option for that very circumstance.
+If you would like to acquire a PAT token manually and supply it, there is a `--pat` option for that very circumstance.
 
 `azdo-npm-auth` requires the project `.npmrc` file exists in order that it can acquire the information to create the content of a user `.npmrc` file. There is an optional `config` parameter; if it is not supplied `azdo-npm-auth` will default to use the `.npmrc` in the current project directory. There will be instructions for creating a project `.npmrc` file in Azure DevOps, for connecting to the Azure Artifacts npm feed. A project `.npmrc` file will look something like this:
 
@@ -163,6 +124,45 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 `-h` | `--help`: Show help
 
 `-v` | `--version`: Show version
+
+## Help with `npm error code E401`
+
+When you are attempting to install from private feeds, npm will commonly error out with some form of `npm error code E401`.
+
+This section exists to list some classic errors you might encounter when you try to `npm i`. Regardless of the error, the remedy is generally:
+
+```shell
+npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
+```
+
+### User `.npmrc` not found
+
+When you have no user `.npmrc` file you'll encounter an error like this:
+
+```shell
+npm error code E401
+npm error Unable to authenticate, your authentication token seems to be invalid.
+npm error To correct this please try logging in again with:
+npm error npm login
+```
+
+### Token used in user `.npmrc` file is expired
+
+When your token has expired in your user `.npmrc` file you'll encounter an error like this:
+
+```shell
+npm error code E401
+npm error Incorrect or missing password.
+npm error If you were trying to login, change your password, create an
+npm error authentication token or enable two-factor authentication then
+npm error that means you likely typed your password in incorrectly.
+npm error Please try again, or recover your password at:
+npm error https://www.npmjs.com/forgot
+npm error
+npm error If you were doing some other operation then your saved credentials are
+npm error probably out of date. To correct this please try logging in again with:
+npm error npm login
+```
 
 ## Credits
 
