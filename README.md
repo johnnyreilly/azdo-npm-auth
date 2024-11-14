@@ -79,7 +79,7 @@ The `--yes` flag above skips having npm challenge the user as to whether to down
 
 If you would like `azdo-npm-auth` to acquire a token on your behalf, then it requires that your [Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/connect-organization-to-azure-ad?view=azure-devops). Then, assuming you are authenticated with Azure, it can acquire an Azure DevOps Personal Access Token on your behalf. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
 
-If you would like to acquire a PAT token manually and supply it, there is a `--pat` option for that very circumstance.
+If you would like to acquire a PAT token manually and supply it, there is a `--pat` option for that very need.
 
 `azdo-npm-auth` requires the project `.npmrc` file exists in order that it can acquire the information to create the content of a user `.npmrc` file. There is an optional `config` parameter; if it is not supplied `azdo-npm-auth` will default to use the `.npmrc` in the current project directory. There will be instructions for creating a project `.npmrc` file in Azure DevOps, for connecting to the Azure Artifacts npm feed. A project `.npmrc` file will look something like this:
 
