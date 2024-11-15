@@ -4,15 +4,17 @@ import { fromZodError } from "zod-validation-error";
 
 import type { TokenResult } from "./types.js";
 
-import { fallbackLogger, type Logger } from "./logger.js";
 import { tokenResultSchema } from "./schemas.js";
+import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 
 export async function createPat({
 	logger = fallbackLogger,
 	organisation,
+	daysToExpiry,
 }: {
 	logger?: Logger;
 	organisation: string;
+	daysToExpiry?: number;
 }): Promise<TokenResult> {
 	// const credential = new InteractiveBrowserCredential({});
 	logger.info(`Creating Azure CLI Token`);
@@ -26,12 +28,11 @@ export async function createPat({
 		"499b84ac-1321-427f-aa17-267ca6975798",
 	]);
 
-	// Get the current date
-	const currentDate = new Date();
+	logger.info(`Created Azure CLI Token`);
+	logger.info();
 
-	// Add 30 days to the current date
-	const futureDate = new Date(currentDate);
-	futureDate.setDate(currentDate.getDate() + 30);
+	// Get the current date
+	const validTo = computeTokenExpiry(daysToExpiry);
 
 	try {
 		// https://learn.microsoft.com/en-us/rest/api/azure/devops/tokens/pats/create?view=azure-devops-rest-7.1&tabs=HTTP
@@ -39,8 +40,8 @@ export async function createPat({
 		const data = {
 			displayName: `made by azdo-npm-auth at: ${new Date().toISOString()}`,
 			scope: "vso.packaging",
-			validTo: futureDate.toISOString(),
 			allOrgs: false,
+			...(validTo && { validTo: validTo.toISOString() }),
 		};
 
 		let responseText = "";
@@ -73,6 +74,11 @@ export async function createPat({
 			throw new Error(errorMessage);
 		}
 
+		logger.info(`Personal Access Token created:
+- name: ${tokenParseResult.data.patToken.displayName}
+- scope: ${tokenParseResult.data.patToken.scope}
+- validTo: ${tokenParseResult.data.patToken.validTo}`);
+
 		return tokenParseResult.data;
 	} catch (error) {
 		const errorMessage = `Error creating Personal Access Token: 
@@ -89,11 +95,23 @@ You can create a PAT here: https://dev.azure.com/${organisation}/_usersSettings/
 	}
 }
 
+function computeTokenExpiry(daysToExpiry: number | undefined) {
+	if (!daysToExpiry) {
+		return undefined;
+	}
+
+	const currentDate = new Date();
+	const futureDate = new Date(currentDate);
+	futureDate.setDate(currentDate.getDate() + daysToExpiry);
+
+	return futureDate;
+}
+
 interface CreatePATRequestBody {
 	allOrgs: boolean;
 	displayName: string;
 	scope: string;
-	validTo: string;
+	validTo?: string;
 }
 
 async function createPATWithApi({
@@ -107,9 +125,8 @@ async function createPATWithApi({
 	url: string;
 	token: string;
 }) {
-	logger.info(
-		`Creating Personal Access Token with API: ${JSON.stringify(data, null, 2)}`,
-	);
+	logger.info(`Creating Personal Access Token with API:`);
+	logger.info(JSON.stringify(data, null, 2));
 
 	const response = await fetch(url, {
 		method: "POST",
@@ -129,6 +146,7 @@ async function createPATWithApi({
 	}
 
 	logger.info(`Created Personal Access Token with API`);
+	logger.info();
 
 	return await response.text();
 }

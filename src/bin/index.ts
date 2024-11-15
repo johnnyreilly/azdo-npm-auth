@@ -11,7 +11,6 @@ import {
 	parseProjectNpmrc,
 	writeNpmrc,
 } from "../index.js";
-import { logLine } from "../shared/cli/lines.js";
 import { withSpinner } from "../shared/cli/spinners.js";
 import { StatusCodes } from "../shared/codes.js";
 import { options } from "../shared/options/args.js";
@@ -24,6 +23,15 @@ const operationMessage = (verb: string) =>
 
 export async function bin(args: string[]) {
 	console.clear();
+
+	const logger = {
+		info: (message = "") => {
+			prompts.log.info(message);
+		},
+		error: (message = "") => {
+			prompts.log.error(message);
+		},
+	};
 
 	const version = await getVersionFromPackageJson();
 
@@ -47,25 +55,24 @@ export async function bin(args: string[]) {
 	}
 
 	prompts.intro(introPrompts);
-	logLine();
 
 	const mappedOptions = {
 		pat: values.pat,
 		config: values.config,
 		email: values.email,
+		daysToExpiry: values.daysToExpiry ? Number(values.daysToExpiry) : undefined,
 	};
 
 	const optionsParseResult = optionsSchema.safeParse(mappedOptions);
 
 	if (!optionsParseResult.success) {
-		logLine(
+		logger.error(
 			chalk.red(
 				fromZodError(optionsParseResult.error, {
 					issueSeparator: "\n    - ",
 				}),
 			),
 		);
-		logLine();
 
 		prompts.cancel(operationMessage("failed"));
 		prompts.outro(outroPrompts);
@@ -73,11 +80,11 @@ export async function bin(args: string[]) {
 		return StatusCodes.Failure;
 	}
 
-	const { config, email, pat } = optionsParseResult.data;
+	const { config, email, pat, daysToExpiry } = optionsParseResult.data;
 
 	// TODO: this will prevent this file from running tests on the server after this - create an override parameter
 	if (ci.isCI) {
-		logLine(
+		logger.error(
 			`Detected that you are running on a CI server (${ci.name ?? ""}) and so will not generate a user .npmrc file`,
 		);
 		prompts.outro(outroPrompts);
@@ -87,22 +94,21 @@ export async function bin(args: string[]) {
 
 	prompts.log.info(`options:
 - pat: ${pat ? "supplied" : "[NONE SUPPLIED - WILL ACQUIRE FROM AZURE]"}
-- config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}
-- email: ${email ?? "[NONE SUPPLIED - WILL USE DEFAULT]"}`);
-
-	const logger = {
-		info: prompts.log.info,
-		error: prompts.log.error,
-	};
+- config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT LOCATION]"}
+- email: ${email ?? "[NONE SUPPLIED - WILL USE DEFAULT VALUE]"}
+- daysToExpiry: ${daysToExpiry ? daysToExpiry.toLocaleString() : "[NONE SUPPLIED - API WILL DETERMINE EXPIRY]"}`);
 
 	try {
-		const parsedProjectNpmrc = await withSpinner(`Parsing project .npmrc`, () =>
-			parseProjectNpmrc({
-				npmrcPath: config
-					? path.resolve(config)
-					: path.resolve(process.cwd(), ".npmrc"),
-				logger,
-			}),
+		const parsedProjectNpmrc = await withSpinner(
+			`Parsing project .npmrc`,
+			logger,
+			(logger) =>
+				parseProjectNpmrc({
+					npmrcPath: config
+						? path.resolve(config)
+						: path.resolve(process.cwd(), ".npmrc"),
+					logger,
+				}),
 		);
 
 		const personalAccessToken = pat
@@ -111,22 +117,29 @@ export async function bin(args: string[]) {
 						token: pat,
 					},
 				}
-			: await withSpinner(`Creating Personal Access Token`, () =>
-					createPat({ logger, organisation: parsedProjectNpmrc.organisation }),
+			: await withSpinner(`Creating Personal Access Token`, logger, (logger) =>
+					createPat({
+						logger,
+						organisation: parsedProjectNpmrc.organisation,
+						daysToExpiry,
+					}),
 				);
 
-		const npmrc = await withSpinner(`Constructing user .npmrc`, () =>
-			Promise.resolve(
-				createUserNpmrc({
-					parsedProjectNpmrc,
-					email,
-					logger,
-					pat: personalAccessToken.patToken.token,
-				}),
-			),
+		const npmrc = await withSpinner(
+			`Constructing user .npmrc`,
+			logger,
+			(logger) =>
+				Promise.resolve(
+					createUserNpmrc({
+						parsedProjectNpmrc,
+						email,
+						logger,
+						pat: personalAccessToken.patToken.token,
+					}),
+				),
 		);
 
-		await withSpinner(`Writing user .npmrc`, () =>
+		await withSpinner(`Writing user .npmrc`, logger, (logger) =>
 			writeNpmrc({
 				npmrc,
 				logger,

@@ -9,6 +9,11 @@ export const options = {
 		type: "string",
 	},
 
+	daysToExpiry: {
+		short: "d",
+		type: "string",
+	},
+
 	pat: {
 		short: "p",
 		type: "string",
@@ -49,6 +54,13 @@ export const allArgOptions: Record<ValidOption, DocOption> = {
 		...options.email,
 		description:
 			"Allows users to supply an explicit email - if not supplied, the example ADO value will be used",
+		docsSection: "optional",
+	},
+
+	daysToExpiry: {
+		...options.daysToExpiry,
+		description:
+			"Allows users to supply an explicit number of days to expiry - if not supplied, then ADO will determine the expiry date",
 		docsSection: "optional",
 	},
 

@@ -60,6 +60,10 @@ describe("logHelpText", () => {
 			  ],
 			  [
 			    "
+			  -d | --daysToExpiry (string): Allows users to supply an explicit number of days to expiry - if not supplied, then ADO will determine the expiry date",
+			  ],
+			  [
+			    "
 			  -p | --pat (string): Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI",
 			  ],
 			  [],
