@@ -1,5 +1,5 @@
-import type { Logger } from "./logger.js";
 import type { ParsedProjectNpmrc } from "./parseProjectNpmrc.js";
+import type { Logger } from "./shared/cli/logger.js";
 
 /**
  * Make a user .npmrc file that looks a little like this:

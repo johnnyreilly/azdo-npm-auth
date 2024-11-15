@@ -1,4 +1,4 @@
-import { fallbackLogger, type Logger } from "./logger.js";
+import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 import { readFileSafe } from "./shared/readFileSafe.js";
 
 export interface ParsedProjectNpmrc {

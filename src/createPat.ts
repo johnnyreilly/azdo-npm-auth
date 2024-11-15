@@ -4,8 +4,8 @@ import { fromZodError } from "zod-validation-error";
 
 import type { TokenResult } from "./types.js";
 
-import { fallbackLogger, type Logger } from "./logger.js";
 import { tokenResultSchema } from "./schemas.js";
+import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 
 export async function createPat({
 	logger = fallbackLogger,
@@ -27,6 +27,9 @@ export async function createPat({
 	const token = await credential.getToken([
 		"499b84ac-1321-427f-aa17-267ca6975798",
 	]);
+
+	logger.info(`Created Azure CLI Token`);
+	logger.info();
 
 	// Get the current date
 	const validTo = computeTokenExpiry(daysToExpiry);
@@ -122,9 +125,8 @@ async function createPATWithApi({
 	url: string;
 	token: string;
 }) {
-	logger.info(
-		`Creating Personal Access Token with API: ${JSON.stringify(data, null, 2)}`,
-	);
+	logger.info(`Creating Personal Access Token with API:`);
+	logger.info(JSON.stringify(data, null, 2));
 
 	const response = await fetch(url, {
 		method: "POST",
@@ -144,6 +146,7 @@ async function createPATWithApi({
 	}
 
 	logger.info(`Created Personal Access Token with API`);
+	logger.info();
 
 	return await response.text();
 }
