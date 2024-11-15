@@ -1,3 +1,9 @@
+# [0.10.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.9.0...0.10.0) (2024-11-15)
+
+### Features
+
+- daysToExpiry option ([#15](https://github.com/johnnyreilly/azdo-npm-auth/issues/15)) ([8c23d20](https://github.com/johnnyreilly/azdo-npm-auth/commit/8c23d2075d8d7dcf81bcf9ad67febc18182153d9)), closes [#16](https://github.com/johnnyreilly/azdo-npm-auth/issues/16)
+
 # [0.9.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.8.0...0.9.0) (2024-11-11)
 
 ### Features
