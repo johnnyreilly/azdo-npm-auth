@@ -55,7 +55,6 @@ export async function bin(args: string[]) {
 	}
 
 	prompts.intro(introPrompts);
-	// logLine();
 
 	const mappedOptions = {
 		pat: values.pat,
