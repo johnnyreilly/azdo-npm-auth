@@ -56,6 +56,18 @@ describe("logHelpText", () => {
 			  ],
 			  [
 			    "
+			  -o | --organization (string): The Azure DevOps organization - only required if not parsing from the .npmrc file",
+			  ],
+			  [
+			    "
+			  -r | --project (string): The Azure DevOps project - only required if not parsing from the .npmrc file and the feed is project-scoped",
+			  ],
+			  [
+			    "
+			  -f | --feed (string): The Azure Artifacts feed - only required if not parsing from the .npmrc file",
+			  ],
+			  [
+			    "
 			  -e | --email (string): Allows users to supply an explicit email - if not supplied, the example ADO value will be used",
 			  ],
 			  [

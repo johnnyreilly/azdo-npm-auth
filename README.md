@@ -35,6 +35,22 @@ If you're catering for Windows users that do not use Bash then you might need to
 npx cross-env npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
 ```
 
+### "No parse"-mode / manually supplying `organization`, `project`, and `feed`
+
+If you would like to manually supply the `organization`, `project`, and `feed` values, you can do so. In this mode of operation `azdo-npm-auth` will not attempt to parse the `.npmrc` file, and will use the supplied values to build a user `.npmrc` file.
+
+If your feed is project-scoped, you will need to supply the `project` value:
+
+```shell
+npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth --organization johnnyreilly --project my-project --feed project-feed-name
+```
+
+If your feed is organization-scoped, you will **not** need to supply the `project` value:
+
+```shell
+npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth --organization johnnyreilly --feed organization-feed-name
+```
+
 ## Integration with `package.json`
 
 ### Custom npm script
@@ -114,6 +130,12 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 ## Options
 
 `-c` | `--config` (`string`): The location of the .npmrc file. Defaults to current directory
+
+`-o` | `--organization` (`string`): The Azure DevOps organization - only required if not parsing from the .npmrc file
+
+`-r` | `--project` (`string`): The Azure DevOps project - only required if not parsing from the .npmrc file and the feed is project-scoped
+
+`-f` | `--feed` (`string`): The Azure Artifacts feed - only required if not parsing from the .npmrc file
 
 `-e` | `--email` (`string`): Allows users to supply an explicit email - if not supplied, the example ADO value will be used
 

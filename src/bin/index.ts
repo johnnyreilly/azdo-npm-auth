@@ -8,6 +8,7 @@ import { fromZodError } from "zod-validation-error";
 import {
 	createPat,
 	createUserNpmrc,
+	makeParsedProjectNpmrc,
 	parseProjectNpmrc,
 	writeNpmrc,
 } from "../index.js";
@@ -59,6 +60,9 @@ export async function bin(args: string[]) {
 	const mappedOptions = {
 		pat: values.pat,
 		config: values.config,
+		organization: values.organization,
+		project: values.project,
+		feed: values.feed,
 		email: values.email,
 		daysToExpiry: values.daysToExpiry ? Number(values.daysToExpiry) : undefined,
 	};
@@ -80,7 +84,8 @@ export async function bin(args: string[]) {
 		return StatusCodes.Failure;
 	}
 
-	const { config, email, pat, daysToExpiry } = optionsParseResult.data;
+	const { config, organization, project, feed, email, pat, daysToExpiry } =
+		optionsParseResult.data;
 
 	// TODO: this will prevent this file from running tests on the server after this - create an override parameter
 	if (ci.isCI) {
@@ -92,23 +97,43 @@ export async function bin(args: string[]) {
 		return StatusCodes.Success;
 	}
 
-	prompts.log.info(`options:
+	const shouldParseProjectNpmrc = !organization && !feed;
+
+	const optionsSuffix = shouldParseProjectNpmrc
+		? `- config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT LOCATION]"}`
+		: `- organization: ${organization ?? ""}
+- project: ${project ?? ""}
+- feed: ${feed ?? ""}
+`;
+
+	prompts.log.info(
+		`options:
 - pat: ${pat ? "supplied" : "[NONE SUPPLIED - WILL ACQUIRE FROM AZURE]"}
-- config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT LOCATION]"}
 - email: ${email ?? "[NONE SUPPLIED - WILL USE DEFAULT VALUE]"}
-- daysToExpiry: ${daysToExpiry ? daysToExpiry.toLocaleString() : "[NONE SUPPLIED - API WILL DETERMINE EXPIRY]"}`);
+- daysToExpiry: ${daysToExpiry ? daysToExpiry.toLocaleString() : "[NONE SUPPLIED - API WILL DETERMINE EXPIRY]"}
+${optionsSuffix}`,
+	);
 
 	try {
 		const parsedProjectNpmrc = await withSpinner(
-			`Parsing project .npmrc`,
+			shouldParseProjectNpmrc
+				? `Parsing project .npmrc`
+				: "Making parsed project .npmrc",
 			logger,
-			(logger) =>
-				parseProjectNpmrc({
-					npmrcPath: config
-						? path.resolve(config)
-						: path.resolve(process.cwd(), ".npmrc"),
-					logger,
-				}),
+			async (logger) => {
+				return shouldParseProjectNpmrc
+					? await parseProjectNpmrc({
+							npmrcPath: config
+								? path.resolve(config)
+								: path.resolve(process.cwd(), ".npmrc"),
+							logger,
+						})
+					: makeParsedProjectNpmrc({
+							organization: organization ?? "",
+							project,
+							feed: feed ?? "",
+						});
+			},
 		);
 
 		const personalAccessToken = pat
@@ -120,7 +145,7 @@ export async function bin(args: string[]) {
 			: await withSpinner(`Creating Personal Access Token`, logger, (logger) =>
 					createPat({
 						logger,
-						organisation: parsedProjectNpmrc.organisation,
+						organisation: parsedProjectNpmrc.organization,
 						daysToExpiry,
 					}),
 				);

@@ -1,5 +1,5 @@
-import type { ParsedProjectNpmrc } from "./parseProjectNpmrc.js";
 import type { Logger } from "./shared/cli/logger.js";
+import type { ParsedProjectNpmrc } from "./types.js";
 
 /**
  * Make a user .npmrc file that looks a little like this:
@@ -26,8 +26,11 @@ export function createUserNpmrc({
 }): string {
 	const base64EncodedPAT = Buffer.from(pat).toString("base64");
 
-	const { urlWithoutRegistryAtEnd, urlWithoutRegistryAtStart, organisation } =
-		parsedProjectNpmrc;
+	const {
+		urlWithoutRegistryAtEnd,
+		urlWithoutRegistryAtStart,
+		organization: organisation,
+	} = parsedProjectNpmrc;
 
 	const npmrc = `; begin auth token
 ${urlWithoutRegistryAtStart}:username=${organisation}
