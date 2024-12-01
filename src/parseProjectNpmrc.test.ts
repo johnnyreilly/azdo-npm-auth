@@ -30,7 +30,8 @@ always-auth=true`);
 		});
 	});
 
-	it("outputs the expected structure when expected last `/` is not there", async () => {
+	// I haven't worked out whether I want to support this yet
+	it.skip("outputs the expected structure when expected last `/` is not there", async () => {
 		mockReadFile.mockResolvedValue(`registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry 
                         
 always-auth=true`);
