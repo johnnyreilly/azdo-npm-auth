@@ -1,3 +1,9 @@
+# [0.11.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.10.0...0.11.0) (2024-12-01)
+
+### Features
+
+- noparse mode ([#17](https://github.com/johnnyreilly/azdo-npm-auth/issues/17)) ([aaa5c2f](https://github.com/johnnyreilly/azdo-npm-auth/commit/aaa5c2f70bc8869a4a604c314e95f1114d842e3f)), closes [#18](https://github.com/johnnyreilly/azdo-npm-auth/issues/18)
+
 # [0.10.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.9.0...0.10.0) (2024-11-15)
 
 ### Features
