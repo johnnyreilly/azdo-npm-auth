@@ -9,10 +9,7 @@ vi.mock("./shared/readFileSafe.js", () => ({
 		return mockReadFile;
 	},
 }));
-/*
 
-always-auth=true
- */
 describe("parseProjectNpmrc", () => {
 	it("outputs the expected structure on successful parse", async () => {
 		mockReadFile.mockResolvedValue(`registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ 
