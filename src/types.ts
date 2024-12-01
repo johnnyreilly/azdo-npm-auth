@@ -10,3 +10,9 @@ export interface TokenResult {
 	};
 	patTokenError: string;
 }
+
+export interface ParsedProjectNpmrc {
+	organization: string;
+	urlWithoutRegistryAtEnd: string;
+	urlWithoutRegistryAtStart: string;
+}

@@ -1,11 +1,7 @@
+import type { ParsedProjectNpmrc } from "./types.js";
+
 import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 import { readFileSafe } from "./shared/readFileSafe.js";
-
-export interface ParsedProjectNpmrc {
-	organisation: string;
-	urlWithoutRegistryAtEnd: string;
-	urlWithoutRegistryAtStart: string;
-}
 
 /**
  * Read the project .npmrc file to acquire necessary info
@@ -49,5 +45,9 @@ export async function parseProjectNpmrc({
 - urlWithoutRegistryAtStart: ${urlWithoutRegistryAtStart}
 - urlWithoutRegistryAtEnd: ${urlWithoutRegistryAtEnd}`);
 
-	return { urlWithoutRegistryAtStart, urlWithoutRegistryAtEnd, organisation };
+	return {
+		urlWithoutRegistryAtStart,
+		urlWithoutRegistryAtEnd,
+		organization: organisation,
+	};
 }

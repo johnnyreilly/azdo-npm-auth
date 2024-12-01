@@ -9,7 +9,10 @@ vi.mock("./shared/readFileSafe.js", () => ({
 		return mockReadFile;
 	},
 }));
+/*
 
+always-auth=true
+ */
 describe("parseProjectNpmrc", () => {
 	it("outputs the expected structure on successful parse", async () => {
 		mockReadFile.mockResolvedValue(`registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ 
@@ -19,7 +22,23 @@ always-auth=true`);
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
 		expect(result).toEqual({
-			organisation: "johnnyreilly",
+			organization: "johnnyreilly",
+			urlWithoutRegistryAtEnd:
+				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
+			urlWithoutRegistryAtStart:
+				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+		});
+	});
+
+	it("outputs the expected structure when expected last `/` is not there", async () => {
+		mockReadFile.mockResolvedValue(`registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry 
+                        
+always-auth=true`);
+		const result = await parseProjectNpmrc({
+			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
+		});
+		expect(result).toEqual({
+			organization: "johnnyreilly",
 			urlWithoutRegistryAtEnd:
 				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
 			urlWithoutRegistryAtStart:

@@ -4,6 +4,21 @@ export const options = {
 		type: "string",
 	},
 
+	organization: {
+		short: "o",
+		type: "string",
+	},
+
+	project: {
+		short: "r",
+		type: "string",
+	},
+
+	feed: {
+		short: "f",
+		type: "string",
+	},
+
 	email: {
 		short: "e",
 		type: "string",
@@ -47,6 +62,27 @@ export const allArgOptions: Record<ValidOption, DocOption> = {
 		...options.config,
 		description:
 			"The location of the .npmrc file. Defaults to current directory",
+		docsSection: "optional",
+	},
+
+	organization: {
+		...options.organization,
+		description:
+			"The Azure DevOps organization - only required if not parsing from the .npmrc file",
+		docsSection: "optional",
+	},
+
+	project: {
+		...options.project,
+		description:
+			"The Azure DevOps project - only required if not parsing from the .npmrc file and the feed is project-scoped",
+		docsSection: "optional",
+	},
+
+	feed: {
+		...options.feed,
+		description:
+			"The Azure Artifacts feed - only required if not parsing from the .npmrc file",
 		docsSection: "optional",
 	},
 
