@@ -1,3 +1,9 @@
+# [1.1.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.12.0...1.1.0) (2024-12-07)
+
+### Features
+
+- 1.0.0 or maybe 1.1.0 once the release automation does its thing ([8161607](https://github.com/johnnyreilly/azdo-npm-auth/commit/8161607481b0f00c712d4270ba69e2316785f461))
+
 # [0.12.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.11.0...0.12.0) (2024-12-07)
 
 ### Features

@@ -1,6 +1,6 @@
 {
 	"name": "azdo-npm-auth",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "Set up local authentication to Azure DevOps npm feeds",
 	"repository": {
 		"type": "git",
