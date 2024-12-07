@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { parseProjectNpmrc } from "./projectNpmrcParse.js";
+import { projectNpmrcParse } from "./projectNpmrcParse.js";
 
 const mockReadFile = vi.fn();
 
@@ -10,12 +10,12 @@ vi.mock("./shared/readFileSafe.js", () => ({
 	},
 }));
 
-describe("parseProjectNpmrc", () => {
+describe("projectNpmrcParse", () => {
 	it("outputs the expected structure on successful parse", async () => {
 		mockReadFile.mockResolvedValue(`registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ 
                         
 always-auth=true`);
-		const result = await parseProjectNpmrc({
+		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
 		expect(result).toEqual({
@@ -32,7 +32,7 @@ always-auth=true`);
 		mockReadFile.mockResolvedValue(`registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry 
                         
 always-auth=true`);
-		const result = await parseProjectNpmrc({
+		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
 		expect(result).toEqual({
@@ -47,7 +47,7 @@ always-auth=true`);
 	it("errors on invalid content", async () => {
 		mockReadFile.mockResolvedValue(`stuff`);
 		await expect(() =>
-			parseProjectNpmrc({
+			projectNpmrcParse({
 				npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 			}),
 		).rejects.toThrowError("Unable to extract information from project .npmrc");

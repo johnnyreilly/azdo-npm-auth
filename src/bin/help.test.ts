@@ -60,11 +60,15 @@ describe("logHelpText", () => {
 			  ],
 			  [
 			    "
-			  -r | --project (string): The Azure DevOps project - only required if not parsing from the .npmrc file and the feed is project-scoped",
+			  -p | --project (string): The Azure DevOps project - only required if not parsing from the .npmrc file and the feed is project-scoped",
 			  ],
 			  [
 			    "
 			  -f | --feed (string): The Azure Artifacts feed - only required if not parsing from the .npmrc file",
+			  ],
+			  [
+			    "
+			  -r | --registry (string): The registry to use, eg 'https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/' - only required if not parsing from the .npmrc file",
 			  ],
 			  [
 			    "
@@ -76,7 +80,7 @@ describe("logHelpText", () => {
 			  ],
 			  [
 			    "
-			  -p | --pat (string): Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI",
+			  -t | --pat (string): Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI",
 			  ],
 			  [],
 			]

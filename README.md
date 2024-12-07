@@ -131,23 +131,18 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 
 ## Options
 
-`-c` | `--config` (`string`): The location of the .npmrc file. Defaults to current directory
-
-`-o` | `--organization` (`string`): The Azure DevOps organization - only required if not parsing from the .npmrc file
-
-`-r` | `--project` (`string`): The Azure DevOps project - only required if not parsing from the .npmrc file and the feed is project-scoped
-
-`-f` | `--feed` (`string`): The Azure Artifacts feed - only required if not parsing from the .npmrc file
-
-`-e` | `--email` (`string`): Allows users to supply an explicit email - if not supplied, the example ADO value will be used
-
-`-d` | `--daysToExpiry` (`number`): Allows users to supply an explicit number of days to expiry - if not supplied, then ADO will determine the expiry date
-
-`-p` | `--pat` (`string`): Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI
-
-`-h` | `--help`: Show help
-
-`-v` | `--version`: Show version
+| Short | Long             | Type     | Description                                                                                                                                                              |
+| ----- | ---------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `-c`  | `--config`       | `string` | The location of the .npmrc file. Defaults to current directory                                                                                                           |
+| `-o`  | `--organization` | `string` | The Azure DevOps organization - only required if not parsing from the .npmrc file                                                                                        |
+| `-p`  | `--project`      | `string` | The Azure DevOps project - only required if not parsing from the .npmrc file and the feed is project-scoped                                                              |
+| `-f`  | `--feed`         | `string` | The Azure Artifacts feed - only required if not parsing from the .npmrc file                                                                                             |
+| `-r`  | `--registry`     | `string` | The registry to use, eg 'https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/' - only required if not parsing from the .npmrc file |
+| `-e`  | `--email`        | `string` | Allows users to supply an explicit email - if not supplied, the example ADO value will be used                                                                           |
+| `-d`  | `--daysToExpiry` | `number` | Allows users to supply an explicit number of days to expiry - if not supplied, then ADO will determine the expiry date                                                   |
+| `-t`  | `--pat`          | `string` | Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI |
+| `-h`  | `--help`         |          | Show help                                                                                                                                                                |
+| `-v`  | `--version`      |          | Show version                                                                                                                                                             |
 
 ## Help with `npm error code E401`
 

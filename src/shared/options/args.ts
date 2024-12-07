@@ -10,12 +10,17 @@ export const options = {
 	},
 
 	project: {
-		short: "r",
+		short: "p",
 		type: "string",
 	},
 
 	feed: {
 		short: "f",
+		type: "string",
+	},
+
+	registry: {
+		short: "r",
 		type: "string",
 	},
 
@@ -30,7 +35,7 @@ export const options = {
 	},
 
 	pat: {
-		short: "p",
+		short: "t",
 		type: "string",
 	},
 
@@ -83,6 +88,13 @@ export const allArgOptions: Record<ValidOption, DocOption> = {
 		...options.feed,
 		description:
 			"The Azure Artifacts feed - only required if not parsing from the .npmrc file",
+		docsSection: "optional",
+	},
+
+	registry: {
+		...options.registry,
+		description:
+			"The registry to use, eg 'https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/' - only required if not parsing from the .npmrc file",
 		docsSection: "optional",
 	},
 

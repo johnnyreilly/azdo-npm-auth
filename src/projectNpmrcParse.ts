@@ -1,12 +1,13 @@
 import type { ParsedProjectNpmrc } from "./types.js";
 
+import { makeFromRegistry } from "./projectNpmrcShared.js";
 import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 import { readFileSafe } from "./shared/readFileSafe.js";
 
 /**
  * Read the project .npmrc file to acquire necessary info
  */
-export async function parseProjectNpmrc({
+export async function projectNpmrcParse({
 	npmrcPath,
 	logger = fallbackLogger,
 }: {
@@ -28,26 +29,7 @@ export async function parseProjectNpmrc({
 		throw new Error(`Unable to extract information from project .npmrc`);
 	}
 
-	const urlWithoutRegistryAtStart = match[0]
-		.replace("registry=https:", "")
-		.trim();
-	const urlWithoutRegistryAtEnd = urlWithoutRegistryAtStart.replace(
-		/registry\/$/,
-		"",
-	);
-	// extract the organisation which we will use as the username
-	// not sure why this is the case, but this is the behaviour
-	// defined in ADO
-	const organisation = urlWithoutRegistryAtEnd.split("/")[3];
+	const registry = match[0].replace("registry=", "").trim();
 
-	logger.info(`Parsed: 
-- organisation: ${organisation}
-- urlWithoutRegistryAtStart: ${urlWithoutRegistryAtStart}
-- urlWithoutRegistryAtEnd: ${urlWithoutRegistryAtEnd}`);
-
-	return {
-		urlWithoutRegistryAtStart,
-		urlWithoutRegistryAtEnd,
-		organization: organisation,
-	};
+	return makeFromRegistry({ registry, logger });
 }

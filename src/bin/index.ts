@@ -8,8 +8,8 @@ import { fromZodError } from "zod-validation-error";
 import {
 	createPat,
 	createUserNpmrc,
-	makeParsedProjectNpmrc,
-	parseProjectNpmrc,
+	projectNpmrcMake,
+	projectNpmrcParse,
 	writeNpmrc,
 } from "../index.js";
 import { withSpinner } from "../shared/cli/spinners.js";
@@ -18,6 +18,7 @@ import { options } from "../shared/options/args.js";
 import { optionsSchema } from "../shared/options/optionsSchema.js";
 import { logHelpText } from "./help.js";
 import { getVersionFromPackageJson } from "./packageJson.js";
+import { projectNpmrcRegistry } from "../projectNpmrcRegistry.js";
 
 const operationMessage = (verb: string) =>
 	`Operation ${verb}. Exiting - maybe another time? 👋`;
@@ -63,6 +64,7 @@ export async function bin(args: string[]) {
 		organization: values.organization,
 		project: values.project,
 		feed: values.feed,
+		registry: values.registry,
 		email: values.email,
 		daysToExpiry: values.daysToExpiry ? Number(values.daysToExpiry) : undefined,
 	};
@@ -84,10 +86,18 @@ export async function bin(args: string[]) {
 		return StatusCodes.Failure;
 	}
 
-	const { config, organization, project, feed, email, pat, daysToExpiry } =
-		optionsParseResult.data;
+	const {
+		config,
+		organization,
+		project,
+		feed,
+		registry,
+		email,
+		pat,
+		daysToExpiry,
+	} = optionsParseResult.data;
 
-	// TODO: this will prevent this file from running tests on the server after this - create an override parameter
+	// TODO: this will prevent this file from running tests on the server after this - create an override parameter?
 	if (ci.isCI) {
 		logger.error(
 			`Detected that you are running on a CI server (${ci.name ?? ""}) and so will not generate a user .npmrc file`,
@@ -97,11 +107,18 @@ export async function bin(args: string[]) {
 		return StatusCodes.Success;
 	}
 
-	const shouldParseProjectNpmrc = !organization && !feed;
+	const projectNpmrcMode = registry
+		? "registry"
+		: !organization && !feed
+			? "parse"
+			: "make";
 
-	const optionsSuffix = shouldParseProjectNpmrc
-		? `- config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT LOCATION]"}`
-		: `- organization: ${organization ?? ""}
+	const optionsSuffix =
+		projectNpmrcMode === "registry"
+			? `- registry: ${registry ?? ""}`
+			: projectNpmrcMode === "parse"
+				? `- config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT LOCATION]"}`
+				: `- organization: ${organization ?? ""}
 - project: ${project ?? ""}
 - feed: ${feed ?? ""}
 `;
@@ -116,23 +133,27 @@ ${optionsSuffix}`,
 
 	try {
 		const parsedProjectNpmrc = await withSpinner(
-			shouldParseProjectNpmrc
-				? `Parsing project .npmrc`
-				: "Making parsed project .npmrc",
+			projectNpmrcMode === "registry"
+				? `Using supplied registry`
+				: projectNpmrcMode === "parse"
+					? `Parsing project .npmrc`
+					: "Making parsed project .npmrc",
 			logger,
 			async (logger) => {
-				return shouldParseProjectNpmrc
-					? await parseProjectNpmrc({
-							npmrcPath: config
-								? path.resolve(config)
-								: path.resolve(process.cwd(), ".npmrc"),
-							logger,
-						})
-					: makeParsedProjectNpmrc({
-							organization: organization ?? "",
-							project,
-							feed: feed ?? "",
-						});
+				return projectNpmrcMode === "registry"
+					? projectNpmrcRegistry({ registry: registry ?? "", logger })
+					: projectNpmrcMode === "parse"
+						? await projectNpmrcParse({
+								npmrcPath: config
+									? path.resolve(config)
+									: path.resolve(process.cwd(), ".npmrc"),
+								logger,
+							})
+						: projectNpmrcMake({
+								organization: organization ?? "",
+								project,
+								feed: feed ?? "",
+							});
 			},
 		);
 

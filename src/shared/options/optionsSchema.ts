@@ -8,6 +8,7 @@ export const optionsSchema = z.object({
 	organization: z.string().optional(),
 	project: z.string().optional(),
 	feed: z.string().optional(),
+	registry: z.string().optional(),
 
 	email: z.string().optional(),
 	daysToExpiry: z.number().optional(),
