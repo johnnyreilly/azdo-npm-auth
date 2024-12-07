@@ -17,10 +17,10 @@ Simply set up user authentication to Azure DevOps npm feeds, optionally using th
 To get `azdo-npm-auth` to create the necessary user `.npmrc` file, run the following command:
 
 ```shell
-npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
+npx -y --registry https://registry.npmjs.org azdo-npm-auth
 ```
 
-You might be wondering what the `npm_config_registry=https://registry.npmjs.org` part is for. It is a way to ensure that the `npx` command uses the **public** npm registry to install `azdo-npm-auth`. Without this, you might encounter an error like below:
+You might be wondering what the `--registry https://registry.npmjs.org` part is for. It is a way to ensure that the `npx` command uses the **public** npm registry to install `azdo-npm-auth`. Without this, you might encounter an error like below:
 
 ```shell
 npm error code E401
@@ -29,26 +29,28 @@ npm error To correct this please try logging in again with:
 npm error npm login
 ```
 
-If you're catering for Windows users that do not use Bash then you might need to introduce a `npx cross-env` prefix:
+It is possible to use environment variables to control the `registry` setting as well; consider the following (non-Windows compatible) example:
 
 ```shell
-npx cross-env npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
+npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
 ```
 
-### "No parse"-mode / manually supplying `organization`, `project`, and `feed`
+But the `--registry` flag is the recommended approach.
 
-If you would like to manually supply the `organization`, `project`, and `feed` values, you can do so. In this mode of operation `azdo-npm-auth` will not attempt to parse the `.npmrc` file, and will use the supplied values to build a user `.npmrc` file.
+### "No parse"-mode / manually supplying `organization`, `feed` and `project`
 
-If your feed is project-scoped, you will need to supply the `project` value:
-
-```shell
-npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth --organization johnnyreilly --project my-project --feed project-feed-name
-```
+If you would like to manually supply the `organization`, `feed` and (optionally) `project` values, you can do so. In this mode of operation `azdo-npm-auth` will not attempt to parse the **project** `.npmrc` file, and will use the supplied values to build a **user** `.npmrc` file.
 
 If your feed is organization-scoped, you will **not** need to supply the `project` value:
 
 ```shell
-npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth --organization johnnyreilly --feed organization-feed-name
+npx -y --registry https://registry.npmjs.org azdo-npm-auth --organization johnnyreilly --feed organization-feed-name
+```
+
+If your feed is project-scoped, you will need to supply the `project` value:
+
+```shell
+npx -y --registry https://registry.npmjs.org azdo-npm-auth --organization johnnyreilly --project my-project --feed project-feed-name
 ```
 
 ## Integration with `package.json`
@@ -59,7 +61,7 @@ We generally advise setting up a custom npm script like the one below:
 
 ```json
 "scripts": {
-  "auth": "npm_config_registry=https://registry.npmjs.org npx --yes azdo-npm-auth"
+  "auth": "npx -y --registry https://registry.npmjs.org azdo-npm-auth"
 },
 ```
 
@@ -73,7 +75,7 @@ First the bad news. The below **won't** work:
 
 ```json
 "scripts": {
-  "preinstall": "npm_config_registry=https://registry.npmjs.org npx --yes azdo-npm-auth"
+  "preinstall": "npx -y --registry https://registry.npmjs.org azdo-npm-auth"
 },
 ```
 
@@ -154,7 +156,7 @@ When you are attempting to install from private feeds, npm will commonly error o
 This section exists to list some classic errors you might encounter when you try to `npm i`. Regardless of the error, the remedy is generally:
 
 ```shell
-npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
+npx -y --registry https://registry.npmjs.org azdo-npm-auth
 ```
 
 ### User `.npmrc` not found

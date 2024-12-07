@@ -1,3 +1,8 @@
+# based on https://github.com/apexskier/github-release-commenter/issues/545#issuecomment-2513388057
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   post_release:
     runs-on: ubuntu-latest
