@@ -12,13 +12,13 @@ import {
 	projectNpmrcParse,
 	writeNpmrc,
 } from "../index.js";
+import { projectNpmrcRegistry } from "../projectNpmrcRegistry.js";
 import { withSpinner } from "../shared/cli/spinners.js";
 import { StatusCodes } from "../shared/codes.js";
 import { options } from "../shared/options/args.js";
 import { optionsSchema } from "../shared/options/optionsSchema.js";
 import { logHelpText } from "./help.js";
 import { getVersionFromPackageJson } from "./packageJson.js";
-import { projectNpmrcRegistry } from "../projectNpmrcRegistry.js";
 
 const operationMessage = (verb: string) =>
 	`Operation ${verb}. Exiting - maybe another time? 👋`;
