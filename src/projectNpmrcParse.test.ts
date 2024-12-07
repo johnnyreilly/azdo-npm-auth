@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { parseProjectNpmrc } from "./parseProjectNpmrc.js";
+import { parseProjectNpmrc } from "./projectNpmrcParse.js";
 
 const mockReadFile = vi.fn();
 

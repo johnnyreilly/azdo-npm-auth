@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { makeParsedProjectNpmrc } from "./makeParsedProjectNpmrc.js";
+import { makeParsedProjectNpmrc } from "./projectNpmrcMake.js";
 
 describe("makeParsedProjectNpmrc", () => {
 	it("given no project it constructs an organisation feed ParsedProjectNpmrc", () => {
