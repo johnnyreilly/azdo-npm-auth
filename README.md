@@ -14,7 +14,11 @@ Simply set up user authentication to Azure DevOps npm feeds, optionally using th
 
 ## Usage
 
-To get `azdo-npm-auth` to create the necessary user `.npmrc` file, run the following command:
+There are three ways to use `azdo-npm-auth`.
+
+### `parse` mode
+
+The simplest way to use `azdo-npm-auth` is to run it without any arguments. In this mode, `azdo-npm-auth` will parse the project `.npmrc` file and use the values it finds there to create a user `.npmrc` file. To get `azdo-npm-auth` to create the necessary user `.npmrc` file in `parse` mode, run the following command:
 
 ```shell
 npx -y --registry https://registry.npmjs.org azdo-npm-auth
@@ -37,9 +41,17 @@ npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
 
 But the `--registry` flag is the recommended approach.
 
-### "No parse"-mode / manually supplying `organization`, `feed` and `project`
+### `registry` mode
 
-If you would like to manually supply the `organization`, `feed` and (optionally) `project` values, you can do so. In this mode of operation `azdo-npm-auth` will not attempt to parse the **project** `.npmrc` file, and will use the supplied values to build a **user** `.npmrc` file.
+The `parse` mode works by reading the `registry` value from the project `.npmrc` file. If you would like to manually supply the `registry` value, you can do so. In this mode of operation `azdo-npm-auth` will not attempt to parse the **project** `.npmrc` file, and will use the supplied `registry` value to build a **user** `.npmrc` file.
+
+```shell
+npx -y --registry https://registry.npmjs.org azdo-npm-auth --registry https://pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/registry/
+```
+
+### `make` mode
+
+The `make` mode allows you to supply the the `organization`, `feed` and (optionally) `project` values to create a user `.npmrc` file. In this mode of operation `azdo-npm-auth` will not attempt to parse the **project** `.npmrc` file, and will use the supplied values to build a **user** `.npmrc` file.
 
 If your feed is organization-scoped, you will **not** need to supply the `project` value:
 
@@ -102,7 +114,7 @@ If you would like to acquire a PAT token manually and supply it, there is a `--p
 `azdo-npm-auth` requires the project `.npmrc` file exists in order that it can acquire the information to create the content of a user `.npmrc` file. There is an optional `config` parameter; if it is not supplied `azdo-npm-auth` will default to use the `.npmrc` in the current project directory. There will be instructions for creating a project `.npmrc` file in Azure DevOps, for connecting to the Azure Artifacts npm feed. A project `.npmrc` file will look something like this:
 
 ```shell
-registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/
+registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/registry/
 
 always-auth=true
 ```
@@ -137,7 +149,7 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 | `-o`  | `--organization` | `string` | The Azure DevOps organization - only required if not parsing from the .npmrc file                                                                                        |
 | `-p`  | `--project`      | `string` | The Azure DevOps project - only required if not parsing from the .npmrc file and the feed is project-scoped                                                              |
 | `-f`  | `--feed`         | `string` | The Azure Artifacts feed - only required if not parsing from the .npmrc file                                                                                             |
-| `-r`  | `--registry`     | `string` | The registry to use, eg 'https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/' - only required if not parsing from the .npmrc file |
+| `-r`  | `--registry`     | `string` | The registry to use, eg 'https://pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/registry/' - only required if not parsing from the .npmrc file    |
 | `-e`  | `--email`        | `string` | Allows users to supply an explicit email - if not supplied, the example ADO value will be used                                                                           |
 | `-d`  | `--daysToExpiry` | `number` | Allows users to supply an explicit number of days to expiry - if not supplied, then ADO will determine the expiry date                                                   |
 | `-t`  | `--pat`          | `string` | Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI |
