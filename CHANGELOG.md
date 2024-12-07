@@ -1,3 +1,9 @@
+# [0.12.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.11.0...0.12.0) (2024-12-07)
+
+### Features
+
+- Cross platform usage docs and attempt to fix post release permissions ([#19](https://github.com/johnnyreilly/azdo-npm-auth/issues/19)) ([282a53c](https://github.com/johnnyreilly/azdo-npm-auth/commit/282a53c1c1ea3cac8798c38efdd6bae981a22895)), closes [#000](https://github.com/johnnyreilly/azdo-npm-auth/issues/000) [/github.com/apexskier/github-release-commenter/issues/545#issuecomment-2513388057](https://github.com//github.com/apexskier/github-release-commenter/issues/545/issues/issuecomment-2513388057)
+
 # [0.11.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/0.10.0...0.11.0) (2024-12-01)
 
 ### Features
