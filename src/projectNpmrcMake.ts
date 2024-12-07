@@ -5,7 +5,7 @@ import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 /**
  * Construct a ParsedProjectNpmrc object using the provided parameters
  */
-export function makeParsedProjectNpmrc({
+export function projectNpmrcMake({
 	organization,
 	project,
 	feed,

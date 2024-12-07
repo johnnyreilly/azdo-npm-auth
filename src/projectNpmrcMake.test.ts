@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { makeParsedProjectNpmrc } from "./makeParsedProjectNpmrc.js";
+import { projectNpmrcMake } from "./projectNpmrcMake.js";
 
-describe("makeParsedProjectNpmrc", () => {
+describe("projectNpmrcMake", () => {
 	it("given no project it constructs an organisation feed ParsedProjectNpmrc", () => {
-		const result = makeParsedProjectNpmrc({
+		const result = projectNpmrcMake({
 			organization: "johnnyreilly",
 			feed: "npmrc-script-organization",
 		});
@@ -18,7 +18,7 @@ describe("makeParsedProjectNpmrc", () => {
 	});
 
 	it("given a project it constructs a project feed ParsedProjectNpmrc", () => {
-		const result = makeParsedProjectNpmrc({
+		const result = projectNpmrcMake({
 			organization: "johnnyreilly",
 			project: "azure-static-web-apps",
 			feed: "npmrc-script-demo",
