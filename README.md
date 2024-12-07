@@ -10,7 +10,7 @@
 	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
 </p>
 
-Simply set up user authentication to Azure DevOps npm feeds, optionally using the Azure CLI for PAT acquisition.
+Simply set up user authentication to Azure DevOps npm feeds, optionally using the Azure CLI for Personal Access Token (PAT) acquisition.
 
 ## Usage
 
