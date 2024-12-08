@@ -1,3 +1,9 @@
+## [1.1.2](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.1.1...1.1.2) (2024-12-08)
+
+### Bug Fixes
+
+- refine docs ([#24](https://github.com/johnnyreilly/azdo-npm-auth/issues/24)) ([5b93351](https://github.com/johnnyreilly/azdo-npm-auth/commit/5b9335162fe8c225315c69c37f200e10a1f05ba0)), closes [#000](https://github.com/johnnyreilly/azdo-npm-auth/issues/000)
+
 ## [1.1.1](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.1.0...1.1.1) (2024-12-08)
 
 ### Bug Fixes
