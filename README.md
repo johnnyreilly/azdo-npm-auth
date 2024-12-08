@@ -39,7 +39,7 @@ It is possible to use environment variables to control the `registry` setting as
 npm_config_registry=https://registry.npmjs.org npx azdo-npm-auth
 ```
 
-But the `--registry` flag is the recommended approach.
+But passing the `--registry` flag directly is the recommended approach.
 
 ### `registry` mode
 
@@ -109,7 +109,7 @@ It is still possible to integrate `azdo-npm-auth` in a `preinstall` script in yo
 },
 ```
 
-However, as you're probably noticing, this approach requires having multiple `package.json`s and only having the `.npmrc` file in the nested one. Assuming that works for you, brilliant. It may not - don't worry. We'll talk about that in a second.
+However, as you're probably noticing, this approach requires having multiple `package.json`s and only having the `.npmrc` file in the nested one. Assuming that works for you, brilliant. It may not.
 
 The `--yes` flag above skips having npm challenge the user as to whether to download the package; useful in a CI environment.
 
@@ -171,6 +171,8 @@ npm error To correct this please try logging in again with:
 npm error npm login
 ```
 
+You need to run `npx -y --registry https://registry.npmjs.org azdo-npm-auth` to create the user `.npmrc` file.
+
 ### Token used in user `.npmrc` file is expired
 
 When your token has expired in your user `.npmrc` file you'll encounter an error like this:
@@ -188,6 +190,8 @@ npm error If you were doing some other operation then your saved credentials are
 npm error probably out of date. To correct this please try logging in again with:
 npm error npm login
 ```
+
+You need to run `npx -y --registry https://registry.npmjs.org azdo-npm-auth` to get a new PAT and recreate the user `.npmrc` file.
 
 ## Credits
 
