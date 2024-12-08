@@ -18,13 +18,13 @@ There are three ways to use `azdo-npm-auth`.
 
 ### `parse` mode
 
-The simplest way to use `azdo-npm-auth` is to run it without any arguments. In this mode, `azdo-npm-auth` will parse the project `.npmrc` file and use the values it finds there to create a user `.npmrc` file. To get `azdo-npm-auth` to create the necessary user `.npmrc` file in `parse` mode, run the following command:
+The simplest way to use `azdo-npm-auth` is to run it without any arguments. In this mode, `azdo-npm-auth` will parse the project `.npmrc` file in the current working directory and use the values it finds there to create a user `.npmrc` file. To get `azdo-npm-auth` to create the necessary user `.npmrc` file in `parse` mode, run the following command:
 
 ```shell
 npx -y --registry https://registry.npmjs.org azdo-npm-auth
 ```
 
-You might be wondering what the `--registry https://registry.npmjs.org` part is for. It is a way to ensure that the `npx` command uses the **public** npm registry to install `azdo-npm-auth`. Without this, you might encounter an error like below:
+You might be wondering what the `--registry https://registry.npmjs.org` part is for. It is a way to ensure that the `npx` command uses the **public** npm registry to install `azdo-npm-auth`. Without this, you might encounter an error like below, as `npx` attempts to install `azdo-npm-auth` from the **private** Azure DevOps npm registry:
 
 ```shell
 npm error code E401
@@ -49,6 +49,8 @@ The `parse` mode works by reading the `registry` value from the project `.npmrc`
 npx -y --registry https://registry.npmjs.org azdo-npm-auth --registry https://pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/registry/
 ```
 
+There's two `--registry` values in the above command. The first is the public npm registry which is where we want to access `azdo-npm-auth`. The second is the registry to use to create the user `.npmrc` file. You will need to change this second value to match your private npm registry feed URL. (This can be found in `Azure DevOps` > `Artifacts` > `Connect to feed` > `npm` or in a local `.npmrc` file).
+
 ### `make` mode
 
 The `make` mode allows you to supply the the `organization`, `feed` and (optionally) `project` values to create a user `.npmrc` file. In this mode of operation `azdo-npm-auth` will not attempt to parse the **project** `.npmrc` file, and will use the supplied values to build a **user** `.npmrc` file.
@@ -64,6 +66,12 @@ If your feed is project-scoped, you will need to supply the `project` value:
 ```shell
 npx -y --registry https://registry.npmjs.org azdo-npm-auth --organization johnnyreilly --project my-project --feed project-feed-name
 ```
+
+## Prerequisites
+
+If you would like `azdo-npm-auth` to acquire a token on your behalf, then it requires that your [Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/connect-organization-to-azure-ad?view=azure-devops). Then, assuming you are authenticated with Azure, it can acquire an Azure DevOps Personal Access Token on your behalf. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
+
+If you would like to acquire a PAT token manually and supply it, there is a `--pat` option for that very need.
 
 ## Integration with `package.json`
 
@@ -104,20 +112,6 @@ It is still possible to integrate `azdo-npm-auth` in a `preinstall` script in yo
 However, as you're probably noticing, this approach requires having multiple `package.json`s and only having the `.npmrc` file in the nested one. Assuming that works for you, brilliant. It may not - don't worry. We'll talk about that in a second.
 
 The `--yes` flag above skips having npm challenge the user as to whether to download the package; useful in a CI environment.
-
-## Prerequisites
-
-If you would like `azdo-npm-auth` to acquire a token on your behalf, then it requires that your [Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/connect-organization-to-azure-ad?view=azure-devops). Then, assuming you are authenticated with Azure, it can acquire an Azure DevOps Personal Access Token on your behalf. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
-
-If you would like to acquire a PAT token manually and supply it, there is a `--pat` option for that very need.
-
-`azdo-npm-auth` requires the project `.npmrc` file exists in order that it can acquire the information to create the content of a user `.npmrc` file. There is an optional `config` parameter; if it is not supplied `azdo-npm-auth` will default to use the `.npmrc` in the current project directory. There will be instructions for creating a project `.npmrc` file in Azure DevOps, for connecting to the Azure Artifacts npm feed. A project `.npmrc` file will look something like this:
-
-```shell
-registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/registry/
-
-always-auth=true
-```
 
 ## What about CI?
 

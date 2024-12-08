@@ -114,14 +114,12 @@ export async function bin(args: string[]) {
 			: "make";
 
 	const optionsSuffix =
-		projectNpmrcMode === "registry"
+		`- mode: ${projectNpmrcMode}\n` +
+		(projectNpmrcMode === "registry"
 			? `- registry: ${registry ?? ""}`
 			: projectNpmrcMode === "parse"
 				? `- config: ${config ?? "[NONE SUPPLIED - WILL USE DEFAULT LOCATION]"}`
-				: `- organization: ${organization ?? ""}
-- project: ${project ?? ""}
-- feed: ${feed ?? ""}
-`;
+				: `- organization: ${organization ?? ""}\n- project: ${project ?? ""}\n- feed: ${feed ?? ""}`);
 
 	prompts.log.info(
 		`options:
