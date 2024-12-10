@@ -22,14 +22,14 @@ export async function projectNpmrcParse({
 		throw new Error(`No .npmrc found at: ${npmrcPath}`);
 	}
 
-	const regex = /^registry=.*$/gm;
-	const match = npmrcContents.match(regex);
+	const regex = /^(?:@[\w-]+:)?registry=(.*)$/m;
+	const match = regex.exec(npmrcContents);
 
 	if (!match || match.length === 0) {
 		throw new Error(`Unable to extract information from project .npmrc`);
 	}
 
-	const registry = match[0].replace("registry=", "").trim();
+	const registry = match[1].trim();
 
 	return makeFromRegistry({ registry, logger });
 }
