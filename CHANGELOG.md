@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.1.2...1.2.0) (2024-12-10)
+
+### Features
+
+- support org scoped npmrc ([#26](https://github.com/johnnyreilly/azdo-npm-auth/issues/26)) ([54ef22d](https://github.com/johnnyreilly/azdo-npm-auth/commit/54ef22d18dde3af0625179c9f3e4e28dfbd1a940)), closes [#25](https://github.com/johnnyreilly/azdo-npm-auth/issues/25) [#25](https://github.com/johnnyreilly/azdo-npm-auth/issues/25)
+
 ## [1.1.2](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.1.1...1.1.2) (2024-12-08)
 
 ### Bug Fixes
