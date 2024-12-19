@@ -11,10 +11,12 @@ export async function createPat({
 	logger = fallbackLogger,
 	organisation,
 	daysToExpiry,
+	scope = "vso.packaging",
 }: {
 	logger?: Logger;
 	organisation: string;
 	daysToExpiry?: number;
+	scope?: string;
 }): Promise<TokenResult> {
 	// const credential = new InteractiveBrowserCredential({});
 	logger.info(`Creating Azure CLI Token`);
@@ -39,7 +41,7 @@ export async function createPat({
 		const url = `https://vssps.dev.azure.com/${organisation}/_apis/tokens/pats?api-version=7.1-preview.1`;
 		const data = {
 			displayName: `made by azdo-npm-auth at: ${new Date().toISOString()}`,
-			scope: "vso.packaging",
+			scope,
 			allOrgs: false,
 			...(validTo && { validTo: validTo.toISOString() }),
 		};
