@@ -1,3 +1,9 @@
+# [1.3.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.2.0...1.3.0) (2024-12-19)
+
+### Features
+
+- provide scope as parameter ([#28](https://github.com/johnnyreilly/azdo-npm-auth/issues/28)) ([822b1c2](https://github.com/johnnyreilly/azdo-npm-auth/commit/822b1c254e120c59fbdfae9f1dba72f816cdd418)), closes [#27](https://github.com/johnnyreilly/azdo-npm-auth/issues/27)
+
 # [1.2.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.1.2...1.2.0) (2024-12-10)
 
 ### Features
