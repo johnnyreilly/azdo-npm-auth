@@ -16,7 +16,7 @@ export async function createPat({
 	logger?: Logger;
 	organisation: string;
 	daysToExpiry?: number;
-	scope: string;
+	scope?: string;
 }): Promise<TokenResult> {
 	// const credential = new InteractiveBrowserCredential({});
 	logger.info(`Creating Azure CLI Token`);
