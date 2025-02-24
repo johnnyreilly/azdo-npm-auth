@@ -139,7 +139,8 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 
 | Short | Long             | Type     | Description                                                                                                                                                              |
 | ----- | ---------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `-c`  | `--config`       | `string` | The location of the .npmrc file. Defaults to current directory                                                                                                           |
+| `-c`  | `--config`       | `string` | The location of the project .npmrc file. Defaults to current directory                                                                                                   |
+| `-n`  | `--npmrcPath`    | `string` | The location of the user .npmrc file. Defaults to user's home directory (~/.npmrc)                                                                                       |
 | `-o`  | `--organization` | `string` | The Azure DevOps organization - only required if not parsing from the .npmrc file                                                                                        |
 | `-p`  | `--project`      | `string` | The Azure DevOps project - only required if not parsing from the .npmrc file and the feed is project-scoped                                                              |
 | `-f`  | `--feed`         | `string` | The Azure Artifacts feed - only required if not parsing from the .npmrc file                                                                                             |

@@ -12,4 +12,5 @@ export const optionsSchema = z.object({
 
 	email: z.string().optional(),
 	daysToExpiry: z.number().optional(),
+	npmrcPath: z.string().optional(),
 });

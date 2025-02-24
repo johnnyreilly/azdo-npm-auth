@@ -16,3 +16,7 @@ export interface ParsedProjectNpmrc {
 	urlWithoutRegistryAtEnd: string;
 	urlWithoutRegistryAtStart: string;
 }
+
+export interface Options {
+	npmrcPath?: string;  // Optional path to the user's .npmrc file
+}
