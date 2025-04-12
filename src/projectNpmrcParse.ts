@@ -1,6 +1,6 @@
 import type { ParsedProjectNpmrc } from "./types.js";
 
-import { makeFromRegistry } from "./projectNpmrcShared.js";
+import { makeParsedProjectNpmrcFromRegistry } from "./projectNpmrcShared.js";
 import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 import { readFileSafe } from "./shared/readFileSafe.js";
 
@@ -24,7 +24,7 @@ export async function projectNpmrcParse({
 
 	const { registry, scope } = parseNpmrcContent(npmrcContents);
 
-	return makeFromRegistry({ registry, scope, logger });
+	return makeParsedProjectNpmrcFromRegistry({ registry, scope, logger });
 }
 
 export function parseNpmrcContent(npmrcContents: string) {

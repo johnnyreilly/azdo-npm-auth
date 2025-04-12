@@ -14,6 +14,8 @@ export interface TokenResult {
 export interface ParsedProjectNpmrc {
 	/** eg johnnyreilly */
 	organization: string;
+	/** eg @myorg */
+	scope: string | undefined;
 	/** eg //pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/ */
 	urlWithoutRegistryAtEnd: string;
 	/** eg //pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ */

@@ -1,14 +1,17 @@
 import type { Logger } from "./shared/cli/logger.js";
+import type { ParsedProjectNpmrc } from "./types.js";
 
-export function makeFromRegistry({
+export function makeParsedProjectNpmrcFromRegistry({
 	registry,
 	scope,
 	logger,
 }: {
+	/** eg https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ */
 	registry: string;
+	/** eg @myorg */
 	scope?: string;
 	logger: Logger;
-}) {
+}): ParsedProjectNpmrc {
 	if (!registry.startsWith("https:")) {
 		throw new Error("Unable to extract information");
 	}
@@ -32,5 +35,6 @@ export function makeFromRegistry({
 		urlWithoutRegistryAtStart,
 		urlWithoutRegistryAtEnd,
 		organization,
+		scope,
 	};
 }

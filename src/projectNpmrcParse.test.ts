@@ -36,6 +36,7 @@ always-auth=true`);
 		});
 		expect(result).toEqual({
 			organization: "johnnyreilly",
+			scope: "@myorg",
 			urlWithoutRegistryAtEnd:
 				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
 			urlWithoutRegistryAtStart:
