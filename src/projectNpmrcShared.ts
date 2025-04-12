@@ -2,9 +2,11 @@ import type { Logger } from "./shared/cli/logger.js";
 
 export function makeFromRegistry({
 	registry,
+	scope,
 	logger,
 }: {
 	registry: string;
+	scope?: string;
 	logger: Logger;
 }) {
 	if (!registry.startsWith("https:")) {
@@ -18,16 +20,17 @@ export function makeFromRegistry({
 	// extract the organisation which we will use as the username
 	// not sure why this is the case, but this is the behaviour
 	// defined in ADO
-	const organisation = urlWithoutRegistryAtEnd.split("/")[3];
+	const organization = urlWithoutRegistryAtEnd.split("/")[3];
 
-	logger.info(`Parsed: 
-- organisation: ${organisation}
+	logger.info(`Parsed:
+- scope: ${scope ?? ""}
+- organisation: ${organization}
 - urlWithoutRegistryAtStart: ${urlWithoutRegistryAtStart}
 - urlWithoutRegistryAtEnd: ${urlWithoutRegistryAtEnd}`);
 
 	return {
 		urlWithoutRegistryAtStart,
 		urlWithoutRegistryAtEnd,
-		organization: organisation,
+		organization,
 	};
 }

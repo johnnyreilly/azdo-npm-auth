@@ -22,14 +22,34 @@ export async function projectNpmrcParse({
 		throw new Error(`No .npmrc found at: ${npmrcPath}`);
 	}
 
-	const regex = /^(?:@[\w-]+:)?registry=(.*)$/m;
-	const match = regex.exec(npmrcContents);
+	const { registry, scope } = parseNpmrcContent(npmrcContents);
 
-	if (!match || match.length === 0) {
+	return makeFromRegistry({ registry, scope, logger });
+}
+
+export function parseNpmrcContent(npmrcContents: string) {
+	const regex = /^(?<scope>@[\w-]+:)?registry=(?<registry>.*)$/gm;
+
+	const matches: { registry: string; scope: string | undefined }[] = [];
+	let match: null | RegExpExecArray = null;
+	while ((match = regex.exec(npmrcContents)) !== null) {
+		if (!match.groups?.registry) {
+			throw new Error(`Unable to extract registry from project .npmrc`);
+		}
+
+		const registry = match.groups.registry.trim();
+
+		const scope = match.groups.scope;
+
+		matches.push({
+			registry,
+			scope: scope ? scope.substring(0, scope.length - 1) : undefined,
+		});
+	}
+
+	if (matches.length === 0) {
 		throw new Error(`Unable to extract information from project .npmrc`);
 	}
 
-	const registry = match[1].trim();
-
-	return makeFromRegistry({ registry, logger });
+	return matches[0];
 }
