@@ -18,13 +18,15 @@ always-auth=true`);
 		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
-		expect(result).toEqual({
-			organization: "johnnyreilly",
-			urlWithoutRegistryAtEnd:
-				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
-			urlWithoutRegistryAtStart:
-				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-		});
+		expect(result).toEqual([
+			{
+				organization: "johnnyreilly",
+				urlWithoutRegistryAtEnd:
+					"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
+				urlWithoutRegistryAtStart:
+					"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+			},
+		]);
 	});
 
 	it("outputs the expected structure on successful parse with org scope", async () => {
@@ -34,14 +36,16 @@ always-auth=true`);
 		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
-		expect(result).toEqual({
-			organization: "johnnyreilly",
-			scope: "@myorg",
-			urlWithoutRegistryAtEnd:
-				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
-			urlWithoutRegistryAtStart:
-				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-		});
+		expect(result).toEqual([
+			{
+				organization: "johnnyreilly",
+				scope: "@myorg",
+				urlWithoutRegistryAtEnd:
+					"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
+				urlWithoutRegistryAtStart:
+					"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+			},
+		]);
 	});
 
 	// introduce later
@@ -101,10 +105,12 @@ describe("parseNpmrcContent", () => {
 			parseNpmrcContent(`registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ 
                         
 always-auth=true`);
-		expect(result).toEqual({
-			registry:
-				"https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-		});
+		expect(result).toEqual([
+			{
+				registry:
+					"https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+			},
+		]);
 	});
 
 	it("outputs the expected registry on successful parse with org scope", () => {
@@ -112,11 +118,13 @@ always-auth=true`);
 			parseNpmrcContent(`@myorg:registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ 
                         
 always-auth=true`);
-		expect(result).toEqual({
-			registry:
-				"https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-			scope: "@myorg",
-		});
+		expect(result).toEqual([
+			{
+				registry:
+					"https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+				scope: "@myorg",
+			},
+		]);
 	});
 
 	it("errors on invalid content", () => {

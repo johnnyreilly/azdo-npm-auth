@@ -13,7 +13,7 @@ export async function projectNpmrcParse({
 }: {
 	npmrcPath: string;
 	logger?: Logger;
-}): Promise<ParsedProjectNpmrc> {
+}): Promise<ParsedProjectNpmrc[]> {
 	logger.info(`Loading .npmrc at: ${npmrcPath}`);
 
 	const npmrcContents = await readFileSafe(npmrcPath, "");
@@ -22,15 +22,22 @@ export async function projectNpmrcParse({
 		throw new Error(`No .npmrc found at: ${npmrcPath}`);
 	}
 
-	const { registry, scope } = parseNpmrcContent(npmrcContents);
+	const matches = parseNpmrcContent(npmrcContents);
 
-	return makeParsedProjectNpmrcFromRegistry({ registry, scope, logger });
+	return matches.map(({ registry, scope }) =>
+		makeParsedProjectNpmrcFromRegistry({ registry, scope, logger }),
+	);
 }
 
-export function parseNpmrcContent(npmrcContents: string) {
+export interface MatchedRegistry {
+	registry: string;
+	scope: string | undefined;
+}
+
+export function parseNpmrcContent(npmrcContents: string): MatchedRegistry[] {
 	const regex = /^(?<scope>@[\w-]+:)?registry=(?<registry>.*)$/gm;
 
-	const matches: { registry: string; scope: string | undefined }[] = [];
+	const matches: MatchedRegistry[] = [];
 	let match: null | RegExpExecArray = null;
 	while ((match = regex.exec(npmrcContents)) !== null) {
 		if (!match.groups?.registry) {
@@ -51,5 +58,5 @@ export function parseNpmrcContent(npmrcContents: string) {
 		throw new Error(`Unable to extract information from project .npmrc`);
 	}
 
-	return matches[0];
+	return matches;
 }

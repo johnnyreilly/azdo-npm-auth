@@ -130,7 +130,7 @@ ${optionsSuffix}`,
 	);
 
 	try {
-		const parsedProjectNpmrc = await withSpinner(
+		const parsedProjectNpmrcs = await withSpinner(
 			projectNpmrcMode === "registry"
 				? `Using supplied registry`
 				: projectNpmrcMode === "parse"
@@ -139,7 +139,7 @@ ${optionsSuffix}`,
 			logger,
 			async (logger) => {
 				return projectNpmrcMode === "registry"
-					? projectNpmrcRegistry({ registry: registry ?? "", logger })
+					? [projectNpmrcRegistry({ registry: registry ?? "", logger })]
 					: projectNpmrcMode === "parse"
 						? await projectNpmrcParse({
 								npmrcPath: config
@@ -147,11 +147,13 @@ ${optionsSuffix}`,
 									: path.resolve(process.cwd(), ".npmrc"),
 								logger,
 							})
-						: projectNpmrcMake({
-								organization: organization ?? "",
-								project,
-								feed: feed ?? "",
-							});
+						: [
+								projectNpmrcMake({
+									organization: organization ?? "",
+									project,
+									feed: feed ?? "",
+								}),
+							];
 			},
 		);
 
@@ -164,7 +166,7 @@ ${optionsSuffix}`,
 			: await withSpinner(`Creating Personal Access Token`, logger, (logger) =>
 					createPat({
 						logger,
-						organisation: parsedProjectNpmrc.organization,
+						organisation: parsedProjectNpmrcs[0].organization,
 						daysToExpiry,
 					}),
 				);
@@ -175,7 +177,7 @@ ${optionsSuffix}`,
 			(logger) =>
 				Promise.resolve(
 					createUserNpmrc({
-						parsedProjectNpmrc,
+						parsedProjectNpmrc: parsedProjectNpmrcs[0],
 						email,
 						logger,
 						pat: personalAccessToken.patToken.token,
