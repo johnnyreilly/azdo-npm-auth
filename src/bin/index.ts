@@ -166,7 +166,7 @@ ${optionsSuffix}`,
 			: await withSpinner(`Creating Personal Access Token`, logger, (logger) =>
 					createPat({
 						logger,
-						organisation: parsedProjectNpmrcs[0].organization,
+						organization: parsedProjectNpmrcs[0].organization,
 						daysToExpiry,
 					}),
 				);

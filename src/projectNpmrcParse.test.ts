@@ -49,7 +49,7 @@ always-auth=true`);
 	});
 
 	// introduce later
-	it.skip("outputs the expected structure on successful parse of multiple organisations and combined organisation and project feeds", async () => {
+	it.skip("outputs the expected structure on successful parse of multiple organizations and combined organization and project feeds", async () => {
 		mockReadFile.mockResolvedValue(`engine-strict=true
 node-options=--max-old-space-size=8192
 

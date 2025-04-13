@@ -9,12 +9,12 @@ import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 
 export async function createPat({
 	logger = fallbackLogger,
-	organisation,
+	organization,
 	daysToExpiry,
 	scope = "vso.packaging",
 }: {
 	logger?: Logger;
-	organisation: string;
+	organization: string;
 	daysToExpiry?: number;
 	scope?: string;
 }): Promise<TokenResult> {
@@ -38,7 +38,7 @@ export async function createPat({
 
 	try {
 		// https://learn.microsoft.com/en-us/rest/api/azure/devops/tokens/pats/create?view=azure-devops-rest-7.1&tabs=HTTP
-		const url = `https://vssps.dev.azure.com/${organisation}/_apis/tokens/pats?api-version=7.1-preview.1`;
+		const url = `https://vssps.dev.azure.com/${organization}/_apis/tokens/pats?api-version=7.1-preview.1`;
 		const data = {
 			displayName: `made by azdo-npm-auth at: ${new Date().toISOString()}`,
 			scope,
@@ -87,12 +87,12 @@ export async function createPat({
 ${error instanceof Error ? error.message : JSON.stringify(error)}
 
 Please ensure that:
-1. Your Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID
+1. Your Azure DevOps organization is connected with your Azure account / Microsoft Entra ID
 2. You are logged into the Azure CLI (use \`az login\` to log in)
 
 If you continue to have issues, consider creating a Personal Access Token with the Packaging read and write scopes manually in Azure DevOps and providing it to \`azdo-npm-auth\` using the \`--pat\` option.
 
-You can create a PAT here: https://dev.azure.com/${organisation}/_usersSettings/tokens`;
+You can create a PAT here: https://dev.azure.com/${organization}/_usersSettings/tokens`;
 		throw new Error(errorMessage);
 	}
 }

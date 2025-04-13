@@ -20,14 +20,14 @@ export function makeParsedProjectNpmrcFromRegistry({
 		/registry\/$/,
 		"",
 	);
-	// extract the organisation which we will use as the username
+	// extract the organization which we will use as the username
 	// not sure why this is the case, but this is the behaviour
 	// defined in ADO
 	const organization = urlWithoutRegistryAtEnd.split("/")[3];
 
 	logger.info(`Parsed:
 - scope: ${scope ?? ""}
-- organisation: ${organization}
+- organization: ${organization}
 - urlWithoutRegistryAtStart: ${urlWithoutRegistryAtStart}
 - urlWithoutRegistryAtEnd: ${urlWithoutRegistryAtEnd}`);
 

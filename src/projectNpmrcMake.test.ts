@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { projectNpmrcMake } from "./projectNpmrcMake.js";
 
 describe("projectNpmrcMake", () => {
-	it("given no project it constructs an organisation feed ParsedProjectNpmrc", () => {
+	it("given no project it constructs an organization feed ParsedProjectNpmrc", () => {
 		const result = projectNpmrcMake({
 			organization: "johnnyreilly",
 			feed: "npmrc-script-organization",
