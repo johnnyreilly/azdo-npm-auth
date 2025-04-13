@@ -3,7 +3,7 @@
 After [forking the repo from GitHub](https://help.github.com/articles/fork-a-repo) and [installing pnpm](https://pnpm.io/installation):
 
 ```shell
-git clone https://github.com/ < your-name-here > /azdo-npm-auth
+git clone https://github.com/johnnyreilly/azdo-npm-auth
 cd azdo-npm-auth
 pnpm install
 ```
@@ -23,6 +23,14 @@ Add `--watch` to run the builder in a watch mode that continuously cleans and re
 
 ```shell
 pnpm build --watch
+```
+
+## Test local build
+
+To try out the local build with a specific package, you can use the `--config` flag to specify the path to the package's `.npmrc` file:
+
+```bash
+pnpm start --config PATH_TO_PACKAGE/.npmrc
 ```
 
 ## Formatting

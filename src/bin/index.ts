@@ -176,12 +176,16 @@ ${optionsSuffix}`,
 			logger,
 			(logger) =>
 				Promise.resolve(
-					createUserNpmrc({
-						parsedProjectNpmrc: parsedProjectNpmrcs[0],
-						email,
-						logger,
-						pat: personalAccessToken.patToken.token,
-					}),
+					parsedProjectNpmrcs
+						.map((parsedProjectNpmrc) =>
+							createUserNpmrc({
+								parsedProjectNpmrc,
+								email,
+								logger,
+								pat: personalAccessToken.patToken.token,
+							}),
+						)
+						.join("\n"),
 				),
 		);
 
