@@ -147,6 +147,7 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 | `-e`  | `--email`        | `string` | Allows users to supply an explicit email - if not supplied, the example ADO value will be used                                                                           |
 | `-d`  | `--daysToExpiry` | `number` | Allows users to supply an explicit number of days to expiry - if not supplied, then ADO will determine the expiry date                                                   |
 | `-t`  | `--pat`          | `string` | Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI |
+| `-w`  | `--what-if`      |          | Do not write output to user .npmrc file; rather output to terminal                                                                                                       |
 | `-h`  | `--help`         |          | Show help                                                                                                                                                                |
 | `-v`  | `--version`      |          | Show version                                                                                                                                                             |
 

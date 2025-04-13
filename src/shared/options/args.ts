@@ -4,6 +4,11 @@ export const options = {
 		type: "string",
 	},
 
+	"what-if": {
+		type: "boolean",
+		short: "w",
+	},
+
 	organization: {
 		short: "o",
 		type: "string",
@@ -67,6 +72,13 @@ export const allArgOptions: Record<ValidOption, DocOption> = {
 		...options.config,
 		description:
 			"The location of the .npmrc file. Defaults to current directory",
+		docsSection: "optional",
+	},
+
+	"what-if": {
+		...options["what-if"],
+		description:
+			"If provided, will not write output to to a user .npmrc file; will instead print to stdout",
 		docsSection: "optional",
 	},
 

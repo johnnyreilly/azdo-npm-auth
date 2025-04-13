@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 export const optionsSchema = z.object({
+	whatIf: z.boolean().optional(),
+
 	pat: z.string().optional(),
 	config: z.string().optional(),
 

@@ -59,6 +59,7 @@ export async function bin(args: string[]) {
 	prompts.intro(introPrompts);
 
 	const mappedOptions = {
+		whatIf: values["what-if"],
 		pat: values.pat,
 		config: values.config,
 		organization: values.organization,
@@ -87,6 +88,7 @@ export async function bin(args: string[]) {
 	}
 
 	const {
+		whatIf,
 		config,
 		organization,
 		project,
@@ -122,7 +124,7 @@ export async function bin(args: string[]) {
 				: `- organization: ${organization ?? ""}\n- project: ${project ?? ""}\n- feed: ${feed ?? ""}`);
 
 	prompts.log.info(
-		`options:
+		`options:${whatIf ? "\n- what-if" : ""}
 - pat: ${pat ? "supplied" : "[NONE SUPPLIED - WILL ACQUIRE FROM AZURE]"}
 - email: ${email ?? "[NONE SUPPLIED - WILL USE DEFAULT VALUE]"}
 - daysToExpiry: ${daysToExpiry ? daysToExpiry.toLocaleString() : "[NONE SUPPLIED - API WILL DETERMINE EXPIRY]"}
@@ -189,12 +191,16 @@ ${optionsSuffix}`,
 				),
 		);
 
-		await withSpinner(`Writing user .npmrc`, logger, (logger) =>
-			writeNpmrc({
-				npmrc,
-				logger,
-			}),
-		);
+		if (whatIf) {
+			console.log(npmrc);
+		} else {
+			await withSpinner(`Writing user .npmrc`, logger, (logger) => {
+				return writeNpmrc({
+					npmrc,
+					logger,
+				});
+			});
+		}
 
 		prompts.outro(outroPrompts);
 
