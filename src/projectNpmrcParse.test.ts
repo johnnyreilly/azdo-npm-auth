@@ -48,8 +48,7 @@ always-auth=true`);
 		]);
 	});
 
-	// introduce later
-	it.skip("outputs the expected structure on successful parse of multiple organizations and combined organization and project feeds", async () => {
+	it("outputs the expected structure on successful parse of multiple organizations and combined organization and project feeds", async () => {
 		mockReadFile.mockResolvedValue(`engine-strict=true
 node-options=--max-old-space-size=8192
 
@@ -64,10 +63,27 @@ always-auth=true`);
 		expect(result).toEqual([
 			{
 				organization: "johnnyreilly",
+				scope: undefined,
 				urlWithoutRegistryAtEnd:
 					"//pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/",
 				urlWithoutRegistryAtStart:
 					"//pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/registry/",
+			},
+			{
+				organization: "johnnyreilly",
+				scope: "@myorg",
+				urlWithoutRegistryAtEnd:
+					"//pkgs.dev.azure.com/johnnyreilly/project-name1/_packaging/project-feed-name/npm/",
+				urlWithoutRegistryAtStart:
+					"//pkgs.dev.azure.com/johnnyreilly/project-name1/_packaging/project-feed-name/npm/registry/",
+			},
+			{
+				organization: "johnnyreilly",
+				scope: "@myorg-other",
+				urlWithoutRegistryAtEnd:
+					"//pkgs.dev.azure.com/johnnyreilly/another-project-name/_packaging/different-project-feed-name/npm/",
+				urlWithoutRegistryAtStart:
+					"//pkgs.dev.azure.com/johnnyreilly/another-project-name/_packaging/different-project-feed-name/npm/registry/",
 			},
 		]);
 	});
