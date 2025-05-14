@@ -56,6 +56,10 @@ describe("logHelpText", () => {
 			  ],
 			  [
 			    "
+			  -w | --what-if: If provided, will not write output to to a user .npmrc file; will instead print to stdout",
+			  ],
+			  [
+			    "
 			  -o | --organization (string): The Azure DevOps organization - only required if not parsing from the .npmrc file",
 			  ],
 			  [

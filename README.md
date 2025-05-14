@@ -69,7 +69,7 @@ npx -y --registry https://registry.npmjs.org azdo-npm-auth --organization johnny
 
 ## Prerequisites
 
-If you would like `azdo-npm-auth` to acquire a token on your behalf, then it requires that your [Azure DevOps organisation is connected with your Azure account / Microsoft Entra ID](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/connect-organization-to-azure-ad?view=azure-devops). Then, assuming you are authenticated with Azure, it can acquire an Azure DevOps Personal Access Token on your behalf. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
+If you would like `azdo-npm-auth` to acquire a token on your behalf, then it requires that your [Azure DevOps organization is connected with your Azure account / Microsoft Entra ID](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/connect-organization-to-azure-ad?view=azure-devops). Then, assuming you are authenticated with Azure, it can acquire an Azure DevOps Personal Access Token on your behalf. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
 
 If you would like to acquire a PAT token manually and supply it, there is a `--pat` option for that very need.
 
@@ -147,6 +147,7 @@ There is an official package named [`ado-npm-auth`](https://github.com/microsoft
 | `-e`  | `--email`        | `string` | Allows users to supply an explicit email - if not supplied, the example ADO value will be used                                                                           |
 | `-d`  | `--daysToExpiry` | `number` | Allows users to supply an explicit number of days to expiry - if not supplied, then ADO will determine the expiry date                                                   |
 | `-t`  | `--pat`          | `string` | Allows users to supply an explicit Personal Access Token (which must include the Packaging read and write scopes) - if not supplied, will be acquired from the Azure CLI |
+| `-w`  | `--what-if`      |          | Do not write output to user .npmrc file; rather output to terminal                                                                                                       |
 | `-h`  | `--help`         |          | Show help                                                                                                                                                                |
 | `-v`  | `--version`      |          | Show version                                                                                                                                                             |
 

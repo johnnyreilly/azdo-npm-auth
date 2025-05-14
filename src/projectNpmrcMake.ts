@@ -34,5 +34,10 @@ export function projectNpmrcMake({
 - urlWithoutRegistryAtStart: ${urlWithoutRegistryAtStart}
 - urlWithoutRegistryAtEnd: ${urlWithoutRegistryAtEnd}`);
 
-	return { urlWithoutRegistryAtStart, urlWithoutRegistryAtEnd, organization };
+	return {
+		urlWithoutRegistryAtStart,
+		urlWithoutRegistryAtEnd,
+		organization,
+		scope: undefined, // scope is not supported in this case (yet)
+	};
 }

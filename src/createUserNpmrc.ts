@@ -26,17 +26,14 @@ export function createUserNpmrc({
 }): string {
 	const base64EncodedPAT = Buffer.from(pat).toString("base64");
 
-	const {
-		urlWithoutRegistryAtEnd,
-		urlWithoutRegistryAtStart,
-		organization: organisation,
-	} = parsedProjectNpmrc;
+	const { urlWithoutRegistryAtEnd, urlWithoutRegistryAtStart, organization } =
+		parsedProjectNpmrc;
 
 	const npmrc = `; begin auth token
-${urlWithoutRegistryAtStart}:username=${organisation}
+${urlWithoutRegistryAtStart}:username=${organization}
 ${urlWithoutRegistryAtStart}:_password=${base64EncodedPAT}
 ${urlWithoutRegistryAtStart}:email=${email}
-${urlWithoutRegistryAtEnd}:username=${organisation}
+${urlWithoutRegistryAtEnd}:username=${organization}
 ${urlWithoutRegistryAtEnd}:_password=${base64EncodedPAT}
 ${urlWithoutRegistryAtEnd}:email=${email}
 ; end auth token

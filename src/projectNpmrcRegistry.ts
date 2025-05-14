@@ -1,6 +1,6 @@
 import type { ParsedProjectNpmrc } from "./types.js";
 
-import { makeFromRegistry } from "./projectNpmrcShared.js";
+import { makeParsedProjectNpmrcFromRegistry } from "./projectNpmrcShared.js";
 import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 
 /**
@@ -15,5 +15,5 @@ export function projectNpmrcRegistry({
 }): ParsedProjectNpmrc {
 	logger.info(`Parsing from registry: ${registry}`);
 
-	return makeFromRegistry({ registry, logger });
+	return makeParsedProjectNpmrcFromRegistry({ registry, logger });
 }

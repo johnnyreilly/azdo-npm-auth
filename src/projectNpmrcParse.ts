@@ -1,6 +1,6 @@
 import type { ParsedProjectNpmrc } from "./types.js";
 
-import { makeFromRegistry } from "./projectNpmrcShared.js";
+import { makeParsedProjectNpmrcFromRegistry } from "./projectNpmrcShared.js";
 import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 import { readFileSafe } from "./shared/readFileSafe.js";
 
@@ -13,7 +13,7 @@ export async function projectNpmrcParse({
 }: {
 	npmrcPath: string;
 	logger?: Logger;
-}): Promise<ParsedProjectNpmrc> {
+}): Promise<ParsedProjectNpmrc[]> {
 	logger.info(`Loading .npmrc at: ${npmrcPath}`);
 
 	const npmrcContents = await readFileSafe(npmrcPath, "");
@@ -22,14 +22,41 @@ export async function projectNpmrcParse({
 		throw new Error(`No .npmrc found at: ${npmrcPath}`);
 	}
 
-	const regex = /^(?:@[\w-]+:)?registry=(.*)$/m;
-	const match = regex.exec(npmrcContents);
+	const matches = parseNpmrcContent(npmrcContents);
 
-	if (!match || match.length === 0) {
+	return matches.map(({ registry, scope }) =>
+		makeParsedProjectNpmrcFromRegistry({ registry, scope, logger }),
+	);
+}
+
+export interface MatchedRegistry {
+	registry: string;
+	scope: string | undefined;
+}
+
+export function parseNpmrcContent(npmrcContents: string): MatchedRegistry[] {
+	const regex = /^(?<scope>@[\w-]+:)?registry=(?<registry>.*)$/gm;
+
+	const matches: MatchedRegistry[] = [];
+	let match: null | RegExpExecArray = null;
+	while ((match = regex.exec(npmrcContents)) !== null) {
+		if (!match.groups?.registry) {
+			throw new Error(`Unable to extract registry from project .npmrc`);
+		}
+
+		const registry = match.groups.registry.trim();
+
+		const scope = match.groups.scope;
+
+		matches.push({
+			registry,
+			scope: scope ? scope.substring(0, scope.length - 1) : undefined,
+		});
+	}
+
+	if (matches.length === 0) {
 		throw new Error(`Unable to extract information from project .npmrc`);
 	}
 
-	const registry = match[1].trim();
-
-	return makeFromRegistry({ registry, logger });
+	return matches;
 }

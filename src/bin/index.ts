@@ -59,6 +59,7 @@ export async function bin(args: string[]) {
 	prompts.intro(introPrompts);
 
 	const mappedOptions = {
+		whatIf: values["what-if"],
 		pat: values.pat,
 		config: values.config,
 		organization: values.organization,
@@ -87,6 +88,7 @@ export async function bin(args: string[]) {
 	}
 
 	const {
+		whatIf,
 		config,
 		organization,
 		project,
@@ -122,7 +124,7 @@ export async function bin(args: string[]) {
 				: `- organization: ${organization ?? ""}\n- project: ${project ?? ""}\n- feed: ${feed ?? ""}`);
 
 	prompts.log.info(
-		`options:
+		`options:${whatIf ? "\n- what-if" : ""}
 - pat: ${pat ? "supplied" : "[NONE SUPPLIED - WILL ACQUIRE FROM AZURE]"}
 - email: ${email ?? "[NONE SUPPLIED - WILL USE DEFAULT VALUE]"}
 - daysToExpiry: ${daysToExpiry ? daysToExpiry.toLocaleString() : "[NONE SUPPLIED - API WILL DETERMINE EXPIRY]"}
@@ -130,7 +132,7 @@ ${optionsSuffix}`,
 	);
 
 	try {
-		const parsedProjectNpmrc = await withSpinner(
+		const parsedProjectNpmrcs = await withSpinner(
 			projectNpmrcMode === "registry"
 				? `Using supplied registry`
 				: projectNpmrcMode === "parse"
@@ -139,7 +141,7 @@ ${optionsSuffix}`,
 			logger,
 			async (logger) => {
 				return projectNpmrcMode === "registry"
-					? projectNpmrcRegistry({ registry: registry ?? "", logger })
+					? [projectNpmrcRegistry({ registry: registry ?? "", logger })]
 					: projectNpmrcMode === "parse"
 						? await projectNpmrcParse({
 								npmrcPath: config
@@ -147,11 +149,13 @@ ${optionsSuffix}`,
 									: path.resolve(process.cwd(), ".npmrc"),
 								logger,
 							})
-						: projectNpmrcMake({
-								organization: organization ?? "",
-								project,
-								feed: feed ?? "",
-							});
+						: [
+								projectNpmrcMake({
+									organization: organization ?? "",
+									project,
+									feed: feed ?? "",
+								}),
+							];
 			},
 		);
 
@@ -164,7 +168,7 @@ ${optionsSuffix}`,
 			: await withSpinner(`Creating Personal Access Token`, logger, (logger) =>
 					createPat({
 						logger,
-						organisation: parsedProjectNpmrc.organization,
+						organization: parsedProjectNpmrcs[0].organization,
 						daysToExpiry,
 					}),
 				);
@@ -174,21 +178,29 @@ ${optionsSuffix}`,
 			logger,
 			(logger) =>
 				Promise.resolve(
-					createUserNpmrc({
-						parsedProjectNpmrc,
-						email,
-						logger,
-						pat: personalAccessToken.patToken.token,
-					}),
+					parsedProjectNpmrcs
+						.map((parsedProjectNpmrc) =>
+							createUserNpmrc({
+								parsedProjectNpmrc,
+								email,
+								logger,
+								pat: personalAccessToken.patToken.token,
+							}),
+						)
+						.join("\n"),
 				),
 		);
 
-		await withSpinner(`Writing user .npmrc`, logger, (logger) =>
-			writeNpmrc({
-				npmrc,
-				logger,
-			}),
-		);
+		if (whatIf) {
+			console.log(npmrc);
+		} else {
+			await withSpinner(`Writing user .npmrc`, logger, (logger) => {
+				return writeNpmrc({
+					npmrc,
+					logger,
+				});
+			});
+		}
 
 		prompts.outro(outroPrompts);
 
