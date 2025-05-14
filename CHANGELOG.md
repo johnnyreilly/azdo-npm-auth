@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.3.0...1.4.0) (2025-05-14)
+
+### Features
+
+- cater for multiple registry entries in a .npmrc file ([#33](https://github.com/johnnyreilly/azdo-npm-auth/issues/33)) ([c14310c](https://github.com/johnnyreilly/azdo-npm-auth/commit/c14310c66630ae7aef2f9860540cdf6e41a2cd5b)), closes [#32](https://github.com/johnnyreilly/azdo-npm-auth/issues/32)
+
 # [1.3.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.2.0...1.3.0) (2024-12-19)
 
 ### Features
