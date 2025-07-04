@@ -21,3 +21,7 @@ export interface ParsedProjectNpmrc {
 	/** eg //pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ */
 	urlWithoutRegistryAtStart: string;
 }
+
+export interface Options {
+	npmrcPath?: string;  // Optional path to the user's .npmrc file
+}
