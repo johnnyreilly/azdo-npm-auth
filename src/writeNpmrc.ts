@@ -14,14 +14,16 @@ export async function writeNpmrc({
 	// Get the home directory
 	const homeDirectory = os.homedir();
 
-	// // Define the path for the .npmrc file
+	// Define the path for the .npmrc file
 	const userNpmrcPath = path.join(homeDirectory, ".npmrc");
 
 	logger.info(`Writing users .npmrc to: ${userNpmrcPath}`);
 
 	try {
 		// Write the content to the .npmrc file
-		await fs.writeFile(userNpmrcPath, npmrc);
+		// fs.appendFile will create the file if it doesn't exist
+		await fs.appendFile(userNpmrcPath, npmrc, "utf8");
+		logger.info("Successfully wrote .npmrc file");
 	} catch (error) {
 		const errorMessage = `Error writing users .npmrc to ${userNpmrcPath}: ${error instanceof Error ? error.message : ""}`;
 		throw new Error(errorMessage);
