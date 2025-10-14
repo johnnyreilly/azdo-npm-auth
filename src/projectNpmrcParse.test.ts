@@ -18,15 +18,17 @@ always-auth=true`);
 		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
-		expect(result).toMatchInlineSnapshot([
-			{
-				organization: "johnnyreilly",
-				urlWithoutRegistryAtEnd:
-					"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
-				urlWithoutRegistryAtStart:
-					"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-			},
-		]);
+		expect(result).toMatchInlineSnapshot(`
+			[
+			  {
+			    "fullRegistryMatch": "registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ ",
+			    "organization": "johnnyreilly",
+			    "scope": undefined,
+			    "urlWithoutRegistryAtEnd": "//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
+			    "urlWithoutRegistryAtStart": "//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+			  },
+			]
+		`);
 	});
 
 	it("outputs the expected structure on successful parse with org scope", async () => {
@@ -36,16 +38,17 @@ always-auth=true`);
 		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
-		expect(result).toMatchInlineSnapshot([
-			{
-				organization: "johnnyreilly",
-				scope: "@myorg",
-				urlWithoutRegistryAtEnd:
-					"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
-				urlWithoutRegistryAtStart:
-					"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-			},
-		]);
+		expect(result).toMatchInlineSnapshot(`
+			[
+			  {
+			    "fullRegistryMatch": "@myorg:registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ ",
+			    "organization": "johnnyreilly",
+			    "scope": "@myorg",
+			    "urlWithoutRegistryAtEnd": "//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
+			    "urlWithoutRegistryAtStart": "//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+			  },
+			]
+		`);
 	});
 
 	it("outputs the expected structure on successful parse of multiple organizations and combined organization and project feeds", async () => {
@@ -60,32 +63,31 @@ always-auth=true`);
 		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
-		expect(result).toMatchInlineSnapshot([
-			{
-				organization: "johnnyreilly",
-				scope: undefined,
-				urlWithoutRegistryAtEnd:
-					"//pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/",
-				urlWithoutRegistryAtStart:
-					"//pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/registry/",
-			},
-			{
-				organization: "johnnyreilly",
-				scope: "@myorg",
-				urlWithoutRegistryAtEnd:
-					"//pkgs.dev.azure.com/johnnyreilly/project-name1/_packaging/project-feed-name/npm/",
-				urlWithoutRegistryAtStart:
-					"//pkgs.dev.azure.com/johnnyreilly/project-name1/_packaging/project-feed-name/npm/registry/",
-			},
-			{
-				organization: "johnnyreilly",
-				scope: "@myorg-other",
-				urlWithoutRegistryAtEnd:
-					"//pkgs.dev.azure.com/johnnyreilly/another-project-name/_packaging/different-project-feed-name/npm/",
-				urlWithoutRegistryAtStart:
-					"//pkgs.dev.azure.com/johnnyreilly/another-project-name/_packaging/different-project-feed-name/npm/registry/",
-			},
-		]);
+		expect(result).toMatchInlineSnapshot(`
+			[
+			  {
+			    "fullRegistryMatch": "registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/registry/",
+			    "organization": "johnnyreilly",
+			    "scope": undefined,
+			    "urlWithoutRegistryAtEnd": "//pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/",
+			    "urlWithoutRegistryAtStart": "//pkgs.dev.azure.com/johnnyreilly/_packaging/organization-feed-name/npm/registry/",
+			  },
+			  {
+			    "fullRegistryMatch": "@myorg:registry=https://pkgs.dev.azure.com/johnnyreilly/project-name1/_packaging/project-feed-name/npm/registry/",
+			    "organization": "johnnyreilly",
+			    "scope": "@myorg",
+			    "urlWithoutRegistryAtEnd": "//pkgs.dev.azure.com/johnnyreilly/project-name1/_packaging/project-feed-name/npm/",
+			    "urlWithoutRegistryAtStart": "//pkgs.dev.azure.com/johnnyreilly/project-name1/_packaging/project-feed-name/npm/registry/",
+			  },
+			  {
+			    "fullRegistryMatch": "@myorg-other:registry=https://pkgs.dev.azure.com/johnnyreilly/another-project-name/_packaging/different-project-feed-name/npm/registry/",
+			    "organization": "johnnyreilly",
+			    "scope": "@myorg-other",
+			    "urlWithoutRegistryAtEnd": "//pkgs.dev.azure.com/johnnyreilly/another-project-name/_packaging/different-project-feed-name/npm/",
+			    "urlWithoutRegistryAtStart": "//pkgs.dev.azure.com/johnnyreilly/another-project-name/_packaging/different-project-feed-name/npm/registry/",
+			  },
+			]
+		`);
 	});
 
 	it("errors on invalid content", async () => {
