@@ -1,3 +1,11 @@
+# Changelog
+
+# [1.5.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.4.0...1.5.0) (2025-10-14)
+
+### Features
+
+- cater for pnpm with scope ([#36](https://github.com/johnnyreilly/azdo-npm-auth/issues/36)) ([68d8560](https://github.com/johnnyreilly/azdo-npm-auth/commit/68d8560cf0d133d930bf18e9617f5168a4bddc6d)), closes [#35](https://github.com/johnnyreilly/azdo-npm-auth/issues/35)
+
 # [1.4.0](https://github.com/johnnyreilly/azdo-npm-auth/compare/1.3.0...1.4.0) (2025-05-14)
 
 ### Features
