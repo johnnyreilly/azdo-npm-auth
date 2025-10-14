@@ -24,12 +24,18 @@ export async function projectNpmrcParse({
 
 	const matches = parseNpmrcContent(npmrcContents);
 
-	return matches.map(({ registry, scope }) =>
-		makeParsedProjectNpmrcFromRegistry({ registry, scope, logger }),
+	return matches.map(({ registry, scope, fullRegistryMatch }) =>
+		makeParsedProjectNpmrcFromRegistry({
+			registry,
+			scope,
+			logger,
+			fullRegistryMatch,
+		}),
 	);
 }
 
 export interface MatchedRegistry {
+	fullRegistryMatch: string;
 	registry: string;
 	scope: string | undefined;
 }
@@ -49,6 +55,7 @@ export function parseNpmrcContent(npmrcContents: string): MatchedRegistry[] {
 		const scope = match.groups.scope;
 
 		matches.push({
+			fullRegistryMatch: match[0],
 			registry,
 			scope: scope ? scope.substring(0, scope.length - 1) : undefined,
 		});

@@ -35,6 +35,7 @@ export function projectNpmrcMake({
 - urlWithoutRegistryAtEnd: ${urlWithoutRegistryAtEnd}`);
 
 	return {
+		fullRegistryMatch: undefined, // fullRegistryMatch is not supported in this case (yet)
 		urlWithoutRegistryAtStart,
 		urlWithoutRegistryAtEnd,
 		organization,

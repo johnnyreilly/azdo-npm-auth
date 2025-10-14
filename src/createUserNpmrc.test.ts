@@ -9,6 +9,7 @@ describe("createUserNpmrc", () => {
 		// Arrange
 		const parsedProjectNpmrc: ParsedProjectNpmrc = {
 			scope: undefined,
+			fullRegistryMatch: undefined,
 			organization: "johnnyreilly",
 			urlWithoutRegistryAtEnd:
 				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
@@ -41,6 +42,7 @@ describe("createUserNpmrc", () => {
 		// Arrange
 		const parsedProjectNpmrc: ParsedProjectNpmrc = {
 			scope: undefined,
+			fullRegistryMatch: undefined,
 			organization: "johnnyreilly",
 			urlWithoutRegistryAtEnd:
 				"//pkgs.dev.azure.com/johnnyreilly/azure-static-web-apps/_packaging/npmrc-script-demo/npm/",
@@ -73,6 +75,7 @@ describe("createUserNpmrc", () => {
 		// Arrange
 		const parsedProjectNpmrc: ParsedProjectNpmrc = {
 			scope: undefined,
+			fullRegistryMatch: undefined,
 			organization: "johnnyreilly",
 			urlWithoutRegistryAtEnd:
 				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
@@ -108,6 +111,8 @@ describe("createUserNpmrc", () => {
 		const parsedProjectNpmrc: ParsedProjectNpmrc = {
 			organization: "johnnyreilly",
 			scope: "@myorg",
+			fullRegistryMatch:
+				"@myorg:registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
 			urlWithoutRegistryAtEnd:
 				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
 			urlWithoutRegistryAtStart:
@@ -135,6 +140,7 @@ describe("createUserNpmrc", () => {
 		// as it's not used by the createUserNpmrc function
 		const base64EncodedPAT = Buffer.from(pat).toString("base64");
 		const expectedNpmrcWithScope = `; begin auth token
+@myorg:registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/
 //pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/:username=johnnyreilly
 //pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/:_password=${base64EncodedPAT}
 //pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/:email=npm requires email to be set but doesn't use the value

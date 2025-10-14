@@ -8,13 +8,15 @@ describe("projectNpmrcMake", () => {
 			organization: "johnnyreilly",
 			feed: "npmrc-script-organization",
 		});
-		expect(result).toEqual({
-			organization: "johnnyreilly",
-			urlWithoutRegistryAtEnd:
-				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
-			urlWithoutRegistryAtStart:
-				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-		});
+		expect(result).toMatchInlineSnapshot(`
+			{
+			  "fullRegistryMatch": undefined,
+			  "organization": "johnnyreilly",
+			  "scope": undefined,
+			  "urlWithoutRegistryAtEnd": "//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
+			  "urlWithoutRegistryAtStart": "//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+			}
+		`);
 	});
 
 	it("given a project it constructs a project feed ParsedProjectNpmrc", () => {
@@ -23,12 +25,14 @@ describe("projectNpmrcMake", () => {
 			project: "azure-static-web-apps",
 			feed: "npmrc-script-demo",
 		});
-		expect(result).toEqual({
-			organization: "johnnyreilly",
-			urlWithoutRegistryAtEnd:
-				"//pkgs.dev.azure.com/johnnyreilly/azure-static-web-apps/_packaging/npmrc-script-demo/npm/",
-			urlWithoutRegistryAtStart:
-				"//pkgs.dev.azure.com/johnnyreilly/azure-static-web-apps/_packaging/npmrc-script-demo/npm/registry/",
-		});
+		expect(result).toMatchInlineSnapshot(`
+			{
+			  "fullRegistryMatch": undefined,
+			  "organization": "johnnyreilly",
+			  "scope": undefined,
+			  "urlWithoutRegistryAtEnd": "//pkgs.dev.azure.com/johnnyreilly/azure-static-web-apps/_packaging/npmrc-script-demo/npm/",
+			  "urlWithoutRegistryAtStart": "//pkgs.dev.azure.com/johnnyreilly/azure-static-web-apps/_packaging/npmrc-script-demo/npm/registry/",
+			}
+		`);
 	});
 });
