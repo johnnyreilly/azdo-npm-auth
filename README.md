@@ -117,7 +117,7 @@ The `--yes` flag above skips having npm challenge the user as to whether to down
 
 You might be worried about `azdo-npm-auth` trying to create user `.npmrc` files when running CI builds. Happily this does not happen; it detects whether it is running in a CI environment and does **not** create a user `.npmrc` file in that case.
 
-## Why Azure DevOps npm auth?
+## Why does Azure DevOps npm auth exist?
 
 Azure DevOps provides a mechanism for publishing npm packages for private use. This package sets up the necessary authentication to access those packages; particularly for non Windows users.
 
