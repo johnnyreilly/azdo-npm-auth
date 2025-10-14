@@ -1,14 +1,17 @@
 import eslint from "@eslint/js";
 import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import vitest from "@vitest/eslint-plugin";
+import { defineConfig } from "eslint/config";
 import jsdoc from "eslint-plugin-jsdoc";
 import n from "eslint-plugin-n";
 import packageJson from "eslint-plugin-package-json/configs/recommended";
 import perfectionist from "eslint-plugin-perfectionist";
 import * as regexp from "eslint-plugin-regexp";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig(
 	{
 		ignores: [
 			"coverage*",
@@ -32,7 +35,7 @@ export default tseslint.config(
 	packageJson,
 	perfectionist.configs["recommended-natural"],
 	regexp.configs["flat/recommended"],
-	...tseslint.config({
+	{
 		extends: [
 			...tseslint.configs.strictTypeChecked,
 			...tseslint.configs.stylisticTypeChecked,
@@ -44,7 +47,7 @@ export default tseslint.config(
 					allowDefaultProject: ["*.*s", "eslint.config.js"],
 					defaultProject: "./tsconfig.json",
 				},
-				tsconfigRootDir: import.meta.dirname,
+				tsconfigRootDir: dirname(fileURLToPath(import.meta.url)),
 			},
 		},
 		rules: {
@@ -94,7 +97,7 @@ export default tseslint.config(
 
 			"jsdoc/match-description": "off",
 		},
-	}),
+	},
 	{
 		files: ["*.jsonc"],
 		rules: {
