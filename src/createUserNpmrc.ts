@@ -26,10 +26,16 @@ export function createUserNpmrc({
 }): string {
 	const base64EncodedPAT = Buffer.from(pat).toString("base64");
 
-	const { urlWithoutRegistryAtEnd, urlWithoutRegistryAtStart, organization } =
-		parsedProjectNpmrc;
+	const {
+		urlWithoutRegistryAtEnd,
+		urlWithoutRegistryAtStart,
+		organization,
+		scope,
+		fullRegistryMatch,
+	} = parsedProjectNpmrc;
+	//@investec:registry=https://pkgs.dev.azure.com/investec/_packaging/investec-npm-packages/npm/registry/
 
-	const npmrc = `; begin auth token
+	const npmrc = `; begin auth token${scope && fullRegistryMatch ? `\n${fullRegistryMatch}` : ""}
 ${urlWithoutRegistryAtStart}:username=${organization}
 ${urlWithoutRegistryAtStart}:_password=${base64EncodedPAT}
 ${urlWithoutRegistryAtStart}:email=${email}

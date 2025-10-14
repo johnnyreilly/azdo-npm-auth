@@ -12,12 +12,14 @@ export interface TokenResult {
 }
 
 export interface ParsedProjectNpmrc {
-	/** eg johnnyreilly */
+	/** eg `@myorg:registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/` */
+	fullRegistryMatch: string | undefined;
+	/** eg `johnnyreilly` */
 	organization: string;
-	/** eg @myorg */
+	/** eg `@myorg` */
 	scope: string | undefined;
-	/** eg //pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/ */
+	/** eg `//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/` */
 	urlWithoutRegistryAtEnd: string;
-	/** eg //pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ */
+	/** eg `//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/` */
 	urlWithoutRegistryAtStart: string;
 }

@@ -18,7 +18,7 @@ always-auth=true`);
 		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
-		expect(result).toEqual([
+		expect(result).toMatchInlineSnapshot([
 			{
 				organization: "johnnyreilly",
 				urlWithoutRegistryAtEnd:
@@ -36,7 +36,7 @@ always-auth=true`);
 		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
-		expect(result).toEqual([
+		expect(result).toMatchInlineSnapshot([
 			{
 				organization: "johnnyreilly",
 				scope: "@myorg",
@@ -60,7 +60,7 @@ always-auth=true`);
 		const result = await projectNpmrcParse({
 			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 		});
-		expect(result).toEqual([
+		expect(result).toMatchInlineSnapshot([
 			{
 				organization: "johnnyreilly",
 				scope: undefined,
@@ -88,23 +88,6 @@ always-auth=true`);
 		]);
 	});
 
-	// I haven't worked out whether I want to support this yet
-	it.skip("outputs the expected structure when expected last `/` is not there", async () => {
-		mockReadFile.mockResolvedValue(`registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry 
-                        
-always-auth=true`);
-		const result = await projectNpmrcParse({
-			npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
-		});
-		expect(result).toEqual({
-			organization: "johnnyreilly",
-			urlWithoutRegistryAtEnd:
-				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/",
-			urlWithoutRegistryAtStart:
-				"//pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-		});
-	});
-
 	it("errors on invalid content", async () => {
 		mockReadFile.mockResolvedValue(`stuff`);
 		await expect(() =>
@@ -121,12 +104,15 @@ describe("parseNpmrcContent", () => {
 			parseNpmrcContent(`registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ 
                         
 always-auth=true`);
-		expect(result).toEqual([
-			{
-				registry:
-					"https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-			},
-		]);
+		expect(result).toMatchInlineSnapshot(`
+			[
+			  {
+			    "fullRegistryMatch": "registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ ",
+			    "registry": "https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+			    "scope": undefined,
+			  },
+			]
+		`);
 	});
 
 	it("outputs the expected registry on successful parse with org scope", () => {
@@ -134,13 +120,15 @@ always-auth=true`);
 			parseNpmrcContent(`@myorg:registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ 
                         
 always-auth=true`);
-		expect(result).toEqual([
-			{
-				registry:
-					"https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
-				scope: "@myorg",
-			},
-		]);
+		expect(result).toMatchInlineSnapshot(`
+			[
+			  {
+			    "fullRegistryMatch": "@myorg:registry=https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/ ",
+			    "registry": "https://pkgs.dev.azure.com/johnnyreilly/_packaging/npmrc-script-organization/npm/registry/",
+			    "scope": "@myorg",
+			  },
+			]
+		`);
 	});
 
 	it("errors on invalid content", () => {
