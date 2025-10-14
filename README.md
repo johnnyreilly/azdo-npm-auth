@@ -67,7 +67,7 @@ If your feed is project-scoped, you will need to supply the `project` value:
 npx -y --registry https://registry.npmjs.org azdo-npm-auth --organization johnnyreilly --project my-project --feed project-feed-name
 ```
 
-## Prerequisites
+## Pre-requisites
 
 If you would like `azdo-npm-auth` to acquire a token on your behalf, then it requires that your [Azure DevOps organization is connected with your Azure account / Microsoft Entra ID](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/connect-organization-to-azure-ad?view=azure-devops). Then, assuming you are authenticated with Azure, it can acquire an Azure DevOps Personal Access Token on your behalf. To authenticate, run `az login`. [If you need to install the Azure CLI, follow these instructions](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli). It is not necessary to run `az login` if you are already authenticated with Azure.
 
