@@ -192,7 +192,7 @@ npm error probably out of date. To correct this please try logging in again with
 npm error npm login
 ```
 
-You need to run `npx -y --registry https://registry.npmjs.org azdo-npm-auth` to get a new PAT and recreate the user `.npmrc` file.
+You need to run `npx -y --registry https://registry.npmjs.org azdo-npm-auth` to get a new PAT and create or update the user `.npmrc` file.
 
 ## Credits
 
