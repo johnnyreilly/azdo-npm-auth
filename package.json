@@ -33,7 +33,7 @@
 		"format": "prettier .",
 		"lint": "eslint . --max-warnings 0",
 		"prepare": "husky",
-		"publish": "pnpm run build && changeset publish",
+		"release": "pnpm run build && changeset publish",
 		"start": "pnpm run build && node ./bin/index.js",
 		"test": "vitest",
 		"tsc": "tsc"
