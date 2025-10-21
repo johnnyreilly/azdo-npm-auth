@@ -1,3 +1,10 @@
+name: Post Release
+
+on:
+  release:
+    types:
+      - published
+
 # based on https://github.com/apexskier/github-release-commenter/issues/545#issuecomment-2513388057
 permissions:
   issues: write
@@ -23,10 +30,3 @@ jobs:
             * [npm package (@latest dist-tag)](https://www.npmjs.com/package/azdo-npm-auth/v/${{ env.npm_version }})
 
             Cheers! 📦🚀
-
-name: Post Release
-
-on:
-  release:
-    types:
-      - published
