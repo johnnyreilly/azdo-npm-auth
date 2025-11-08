@@ -1,4 +1,5 @@
 .husky/
+.changeset/
 coverage/
 lib/
 pnpm-lock.yaml
