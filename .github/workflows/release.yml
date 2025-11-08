@@ -24,6 +24,9 @@ jobs:
 
       - uses: ./.github/actions/prepare
 
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
@@ -32,5 +35,5 @@ jobs:
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # comment to test using trusted publishing
           NPM_CONFIG_PROVENANCE: true
