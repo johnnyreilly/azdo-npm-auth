@@ -11,6 +11,12 @@ export interface Logger {
 	info: (message?: string) => void;
 }
 
+export interface SpinnerLogger extends Logger {
+	flush: () => void;
+}
+
+type MessageType = "error" | "info";
+
 export function makeLogger(indent = 5): Logger {
 	const prefix = chalk.gray("│") + " ".repeat(indent);
 
@@ -37,12 +43,6 @@ export function makeLogger(indent = 5): Logger {
 		},
 	};
 }
-
-export interface SpinnerLogger extends Logger {
-	flush: () => void;
-}
-
-type MessageType = "error" | "info";
 
 export function makeSpinnerLogger(logger: Logger): SpinnerLogger {
 	const logs: {

@@ -7,6 +7,13 @@ import type { TokenResult } from "./types.js";
 import { tokenResultSchema } from "./schemas.js";
 import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 
+interface CreatePATRequestBody {
+	allOrgs: boolean;
+	displayName: string;
+	scope: string;
+	validTo?: string;
+}
+
 export async function createPat({
 	logger = fallbackLogger,
 	organization,
@@ -83,7 +90,7 @@ export async function createPat({
 
 		return tokenParseResult.data;
 	} catch (error) {
-		const errorMessage = `Error creating Personal Access Token: 
+		const errorMessage = `Error creating Personal Access Token:
 ${error instanceof Error ? error.message : JSON.stringify(error)}
 
 Please ensure that:
@@ -93,7 +100,7 @@ Please ensure that:
 If you continue to have issues, consider creating a Personal Access Token with the Packaging read and write scopes manually in Azure DevOps and providing it to \`azdo-npm-auth\` using the \`--pat\` option.
 
 You can create a PAT here: https://dev.azure.com/${organization}/_usersSettings/tokens`;
-		throw new Error(errorMessage);
+		throw new Error(errorMessage, { cause: error });
 	}
 }
 
@@ -107,13 +114,6 @@ function computeTokenExpiry(daysToExpiry: number | undefined) {
 	futureDate.setDate(currentDate.getDate() + daysToExpiry);
 
 	return futureDate;
-}
-
-interface CreatePATRequestBody {
-	allOrgs: boolean;
-	displayName: string;
-	scope: string;
-	validTo?: string;
 }
 
 async function createPATWithApi({
@@ -198,6 +198,6 @@ async function createPATWithAzCli({
 					? error.message
 					: "UNKNOWN ERROR"
 		}`;
-		throw new Error(errorMessage);
+		throw new Error(errorMessage, { cause: error });
 	}
 }

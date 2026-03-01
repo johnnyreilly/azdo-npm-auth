@@ -11,9 +11,9 @@ import { lowerFirst } from "./lowerFirst.js";
 
 const spinner = prompts.spinner();
 
-export type SpinnerTask<Return> = (logger: SpinnerLogger) => Promise<Return>;
-
 export type LabeledSpinnerTask<Return> = [string, SpinnerTask<Return>];
+
+export type SpinnerTask<Return> = (logger: SpinnerLogger) => Promise<Return>;
 
 export async function withSpinner<Return>(
 	label: string,
