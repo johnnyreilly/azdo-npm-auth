@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build:** `pnpm build` (uses tsup, outputs to `lib/`)
 - **Build watch:** `pnpm build --watch`
 - **Test:** `pnpm test` (vitest)
-- **Run single test:** `pnpm test src/createPat.test.ts`
+- **Run single test:** `pnpm test src/projectNpmrcParse.test.ts`
 - **Test with coverage:** `pnpm test -- --coverage`
 - **Lint:** `pnpm lint` (eslint, zero warnings enforced with `--max-warnings 0`)
 - **Format check:** `pnpm format --check`
