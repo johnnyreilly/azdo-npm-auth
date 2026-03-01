@@ -64,7 +64,7 @@ Input validation uses Zod schemas (`src/schemas.ts`) with `zod-validation-error`
 ## Code Style
 
 - TypeScript strict mode, ES2022 target, NodeNext module resolution
-- ESLint 9 flat config with type-checked rules (`eslint.config.js`)
+- ESLint 10 flat config with type-checked rules (`eslint.config.js`)
 - Prettier with tabs (plugins: curly, sh, packagejson)
 - Pre-commit hook runs lint-staged (prettier) via Husky
 - Conventional commits required for PRs
