@@ -160,13 +160,13 @@ describe("bin", () => {
 		const code = 2;
 
 		const validationResult = z
-			.object({ email: z.string().email() })
+			.object({ email: z.email() })
 			.safeParse({ email: "abc123" });
 
 		mockPromptForMode.mockResolvedValue({ mode });
 		mockInitialize.mockResolvedValue({
 			code: 2,
-			error: (validationResult as z.SafeParseError<{ email: string }>).error,
+			error: (validationResult as z.ZodSafeParseError<{ email: string }>).error,
 			options: {},
 		});
 

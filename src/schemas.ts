@@ -8,11 +8,11 @@ const patTokenSchema = z.object({
 		message: "Invalid date format for validTo",
 	}),
 	scope: z.string(),
-	targetAccounts: z.array(z.string().uuid()),
+	targetAccounts: z.array(z.uuid()),
 	validFrom: z.string().refine((date) => !isNaN(Date.parse(date)), {
 		message: "Invalid date format for validFrom",
 	}),
-	authorizationId: z.string().uuid(),
+	authorizationId: z.uuid(),
 	token: z.string(),
 });
 
