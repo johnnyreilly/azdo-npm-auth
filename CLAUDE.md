@@ -76,4 +76,4 @@ Uses **Changesets** for versioning and releases. Add a changeset with `pnpm chan
 ## Node/Tooling Versions
 
 - Node.js: >=18.3.0 (runtime), v22 in CI, v20.12.2 in `.nvmrc`
-- Package manager: pnpm v10
+- Package manager: pnpm v9
