@@ -26,11 +26,11 @@ Single-package TypeScript library (not a monorepo). ESM-only (`"type": "module"`
 
 ### Three Operation Modes
 
-The CLI (`src/bin/index.ts`) supports three modes controlled by `--npmrcMode`:
+The CLI (`src/bin/index.ts`) infers its mode from the provided arguments:
 
-1. **parse** (default) — Reads an existing project `.npmrc` to extract Azure DevOps registry URLs, then generates auth entries
-2. **registry** — Takes explicit `--registry` URL to generate auth entries
-3. **make** — Constructs registry URL from `--organization`, `--project`, and `--feed` components
+1. **parse** (default) — Selected when **no** `--registry` is passed and **both** `--organization` and `--feed` are missing. Reads an existing project `.npmrc` to extract Azure DevOps registry URLs, then generates auth entries.
+2. **registry** — Selected when `--registry` is provided. Takes the explicit `--registry` URL to generate auth entries.
+3. **make** — Selected when `--registry` is **not** provided but at least one of `--organization` or `--feed` is passed (optionally with `--project`). Constructs the registry URL from `--organization`, `--project`, and `--feed` components.
 
 ### Core Flow
 
