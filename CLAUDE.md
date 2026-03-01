@@ -18,7 +18,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Format fix:** `pnpm format --write`
 - **Type check:** `pnpm tsc`
 - **Run locally:** `pnpm start` (builds then executes)
-- **Local test with custom config:** `node bin/index.js --config path/to/.npmrc`
+- **Local test with custom config:** `pnpm start -- --config path/to/.npmrc`
 
 ## Architecture
 
