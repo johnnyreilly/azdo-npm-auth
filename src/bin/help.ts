@@ -18,30 +18,24 @@ interface SubsectionFlag {
 	type: string;
 }
 
-function logHelpTextSection(section: HelpTextSection): void {
-	console.log(" ");
+export function logHelpText(introLogs: string[]): void {
+	const helpTextSections = createHelpTextSections();
 
-	console.log(chalk.black.bgGreenBright(section.sectionHeading));
+	for (const log of introLogs) {
+		console.log(log);
+		console.log(" ");
+	}
 
-	for (const subsection of section.subsections) {
-		if (subsection.warning) {
-			console.log(chalk.yellow(subsection.warning));
-		}
+	console.log(
+		chalk.cyan(
+			`Configure local development environments for Azure apps with one command`,
+		),
+	);
 
-		if (subsection.subheading) {
-			console.log(chalk.green(subsection.subheading));
-		}
+	for (const section of helpTextSections) {
+		logHelpTextSection(section);
 
-		for (const { description, flag, short, type } of subsection.flags) {
-			console.log(
-				chalk.cyan(
-					`
-  -${short} | --${flag}${
-		type !== "boolean" ? ` (${chalk.cyanBright(type)})` : ""
-	}: ${description}`,
-				),
-			);
-		}
+		console.log();
 	}
 }
 
@@ -81,23 +75,29 @@ function createHelpTextSections(): HelpTextSection[] {
 	return [core, optional];
 }
 
-export function logHelpText(introLogs: string[]): void {
-	const helpTextSections = createHelpTextSections();
+function logHelpTextSection(section: HelpTextSection): void {
+	console.log(" ");
 
-	for (const log of introLogs) {
-		console.log(log);
-		console.log(" ");
-	}
+	console.log(chalk.black.bgGreenBright(section.sectionHeading));
 
-	console.log(
-		chalk.cyan(
-			`Configure local development environments for Azure apps with one command`,
-		),
-	);
+	for (const subsection of section.subsections) {
+		if (subsection.warning) {
+			console.log(chalk.yellow(subsection.warning));
+		}
 
-	for (const section of helpTextSections) {
-		logHelpTextSection(section);
+		if (subsection.subheading) {
+			console.log(chalk.green(subsection.subheading));
+		}
 
-		console.log();
+		for (const { description, flag, short, type } of subsection.flags) {
+			console.log(
+				chalk.cyan(
+					`
+  -${short} | --${flag}${
+		type !== "boolean" ? ` (${chalk.cyanBright(type)})` : ""
+	}: ${description}`,
+				),
+			);
+		}
 	}
 }

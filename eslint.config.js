@@ -1,12 +1,12 @@
-import eslint from "@eslint/js";
 import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
+import eslint from "@eslint/js";
 import vitest from "@vitest/eslint-plugin";
-import { defineConfig } from "eslint/config";
 import jsdoc from "eslint-plugin-jsdoc";
 import n from "eslint-plugin-n";
-import packageJson from "eslint-plugin-package-json/configs/recommended";
+import packageJson from "eslint-plugin-package-json";
 import perfectionist from "eslint-plugin-perfectionist";
 import * as regexp from "eslint-plugin-regexp";
+import { defineConfig } from "eslint/config";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import tseslint from "typescript-eslint";
@@ -32,7 +32,7 @@ export default defineConfig(
 	jsdoc.configs["flat/logical-typescript-error"],
 	jsdoc.configs["flat/stylistic-typescript-error"],
 	n.configs["flat/recommended"],
-	packageJson,
+	packageJson.configs.recommended,
 	perfectionist.configs["recommended-natural"],
 	regexp.configs["flat/recommended"],
 	{
@@ -125,6 +125,7 @@ export default defineConfig(
 			// These on-by-default rules aren't useful in test files.
 			"@typescript-eslint/no-unsafe-assignment": "off",
 			"@typescript-eslint/no-unsafe-call": "off",
+			"vitest/no-disabled-tests": "off",
 		},
 	},
 );

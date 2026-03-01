@@ -55,8 +55,6 @@ export const options = {
 	},
 } as const;
 
-export type ValidOption = keyof typeof options;
-
 export interface DocOption {
 	description: string;
 	docsSection: "core" | "optional";
@@ -64,6 +62,8 @@ export interface DocOption {
 	short: string;
 	type: string;
 }
+
+export type ValidOption = keyof typeof options;
 
 // two modes: use resource group and subscription name to get branch resources, or pass explicit resource names
 

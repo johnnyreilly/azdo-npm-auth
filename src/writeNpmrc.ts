@@ -24,6 +24,6 @@ export async function writeNpmrc({
 		await fs.writeFile(userNpmrcPath, npmrc);
 	} catch (error) {
 		const errorMessage = `Error writing users .npmrc to ${userNpmrcPath}: ${error instanceof Error ? error.message : ""}`;
-		throw new Error(errorMessage);
+		throw new Error(errorMessage, { cause: error });
 	}
 }
