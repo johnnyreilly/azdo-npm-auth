@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.3
+
+### Patch Changes
+
+- 542d805: add CLAUDE.md for Claude Code guidance and upgrade dependencies to the latest and greatest.
+
 ## 1.8.2
 
 ### Patch Changes
