@@ -49,6 +49,14 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm tsc
 
+  knip:
+    name: Knip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/prepare
+      - run: pnpm knip
+
   are_the_types_wrong:
     name: Are the types wrong?
     runs-on: ubuntu-latest
