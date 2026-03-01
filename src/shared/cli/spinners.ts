@@ -35,7 +35,7 @@ export async function withSpinner<Return>(
 
 		return result;
 	} catch (error) {
-		spinner.stop(chalk.red(`❌ Error ${lowerFirst(label)}.`));
+		spinner.error(chalk.red(`❌ Error ${lowerFirst(label)}.`));
 
 		spinnerLogger.flush();
 
