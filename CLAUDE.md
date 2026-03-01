@@ -17,6 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Format check:** `pnpm format --check`
 - **Format fix:** `pnpm format --write`
 - **Type check:** `pnpm tsc`
+- **Check unused code/deps:** `pnpm knip`
 - **Run locally:** `pnpm start` (builds then executes)
 - **Local test with custom config:** `pnpm start -- --config path/to/.npmrc`
 
@@ -46,7 +47,7 @@ CI environments are auto-detected via `ci-info` and skip file writing.
 - `src/bin/` — CLI entry point, argument parsing, help text
 - `src/shared/cli/` — Logger, spinners, outro messaging
 - `src/shared/options/` — CLI option definitions and Zod schemas
-- `src/schemas.ts` — Zod validation schemas for inputs
+- `src/schemas.ts` — Zod validation schemas for API responses (PAT token result)
 - `src/types.ts` — TypeScript interfaces
 
 ### Validation
@@ -75,4 +76,4 @@ Uses **Changesets** for versioning and releases. Add a changeset with `pnpm chan
 ## Node/Tooling Versions
 
 - Node.js: >=18.3.0 (runtime), v22 in CI, v20.12.2 in `.nvmrc`
-- Package manager: pnpm v9
+- Package manager: pnpm v10
