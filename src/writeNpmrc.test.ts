@@ -221,6 +221,18 @@ describe("writeNpmrc", () => {
 		);
 	});
 
+	it("throws when readFile fails with a non-ENOENT error", async () => {
+		mockReadFile.mockRejectedValue(
+			Object.assign(new Error("EACCES: permission denied"), {
+				code: "EACCES",
+			}),
+		);
+
+		await expect(writeNpmrc({ npmrc: authBlock })).rejects.toThrow(
+			`Error writing users .npmrc to ${userNpmrcPath}: EACCES: permission denied`,
+		);
+	});
+
 	it("logs the path being written to", async () => {
 		mockReadFile.mockResolvedValue("");
 		mockWriteFile.mockResolvedValue(undefined);

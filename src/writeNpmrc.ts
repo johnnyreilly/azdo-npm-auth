@@ -77,7 +77,10 @@ export async function writeNpmrc({
 		let existingContent = "";
 		try {
 			existingContent = await fs.readFile(userNpmrcPath, "utf-8");
-		} catch {
+		} catch (readError) {
+			if ((readError as NodeJS.ErrnoException).code !== "ENOENT") {
+				throw readError;
+			}
 			// File does not exist yet; start with empty content
 		}
 
