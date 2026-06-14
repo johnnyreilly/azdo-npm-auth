@@ -4,19 +4,23 @@ import path from "node:path";
 
 import { fallbackLogger, type Logger } from "./shared/cli/logger.js";
 
-const AUTH_BLOCK_REGEX = /; begin auth token[\s\S]*?; end auth token\n?/g;
+const BEGIN_MARKER = "; begin auth token";
+const END_MARKER = "; end auth token";
 
 /**
  * Merges new auth token blocks into existing .npmrc content.
  * Existing auth blocks for the same registry are replaced in place.
  * New auth blocks for registries not already present are appended.
- * All other content is preserved unchanged.
+ * All other content (including auth blocks for other registries) is preserved unchanged.
+ * Only auth token blocks (delimited by "; begin auth token" / "; end auth token") from
+ * newContent are processed; any other text in newContent outside those delimiters is ignored.
+ * A blank line is inserted before each appended block when the existing content is non-empty.
  */
 export function mergeNpmrcContent(
 	existingContent: string,
 	newContent: string,
 ): string {
-	const newBlocks = [...newContent.matchAll(AUTH_BLOCK_REGEX)].map((m) => m[0]);
+	const newBlocks = extractAuthBlocks(newContent);
 
 	if (newBlocks.length === 0) {
 		return existingContent;
@@ -24,17 +28,26 @@ export function mergeNpmrcContent(
 
 	const remainingBlocks = [...newBlocks];
 
-	let result = existingContent.replace(AUTH_BLOCK_REGEX, (existingBlock) => {
+	// Replace matching existing blocks with their updated counterparts.
+	const existingBlocks = extractAuthBlocks(existingContent);
+	let result = existingContent;
+	for (const existingBlock of existingBlocks) {
 		const matchIndex = remainingBlocks.findIndex((newBlock) =>
 			blocksMatchSameRegistry(existingBlock, newBlock),
 		);
 		if (matchIndex !== -1) {
 			const replacement = remainingBlocks.splice(matchIndex, 1)[0];
-			return replacement;
+			const idx = result.indexOf(existingBlock);
+			if (idx !== -1) {
+				result =
+					result.slice(0, idx) +
+					replacement +
+					result.slice(idx + existingBlock.length);
+			}
 		}
-		return existingBlock;
-	});
+	}
 
+	// Append any remaining new blocks that didn't match an existing one.
 	for (const block of remainingBlocks) {
 		if (result.length > 0) {
 			result += "\n";
@@ -87,6 +100,31 @@ function blocksMatchSameRegistry(block1: string, block2: string): boolean {
 		}
 	}
 	return false;
+}
+
+/** Extracts all auth token blocks (including delimiters) from a string. */
+function extractAuthBlocks(content: string): string[] {
+	const blocks: string[] = [];
+	let searchStart = 0;
+	for (;;) {
+		const beginIdx = content.indexOf(BEGIN_MARKER, searchStart);
+		if (beginIdx === -1) {
+			break;
+		}
+		const endIdx = content.indexOf(END_MARKER, beginIdx + BEGIN_MARKER.length);
+		if (endIdx === -1) {
+			break;
+		}
+		const blockEnd = endIdx + END_MARKER.length;
+		// Include the trailing newline if present so blocks are self-contained.
+		const end =
+			blockEnd < content.length && content[blockEnd] === "\n"
+				? blockEnd + 1
+				: blockEnd;
+		blocks.push(content.slice(beginIdx, end));
+		searchStart = end;
+	}
+	return blocks;
 }
 
 function getRegistryUrls(block: string): Set<string> {
