@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.0
+
+### Minor Changes
+
+- 0bb934e: feat: update users `.npmrc` in place instead of replacing it
+
 ## 1.8.3
 
 ### Patch Changes
