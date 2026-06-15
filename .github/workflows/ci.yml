@@ -10,7 +10,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/prepare
       - run: pnpm build
       - run: node ./lib/index.js
@@ -19,7 +19,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/prepare
       - run: pnpm build
       - run: pnpm lint
@@ -28,7 +28,7 @@ jobs:
     name: Prettier
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/prepare
       - run: pnpm format --list-different
 
@@ -36,7 +36,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/prepare
       - run: pnpm run test --coverage
       - uses: codecov/codecov-action@v3
@@ -45,7 +45,7 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/prepare
       - run: pnpm tsc
 
@@ -53,7 +53,7 @@ jobs:
     name: Knip
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/prepare
       - run: pnpm knip
 
@@ -61,7 +61,7 @@ jobs:
     name: Are the types wrong?
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/prepare
       - run: pnpm build
       - run: npx --yes @arethetypeswrong/cli --pack . --ignore-rules cjs-resolves-to-esm
