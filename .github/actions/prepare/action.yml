@@ -4,11 +4,11 @@ name: Prepare
 
 runs:
   steps:
-    - uses: pnpm/action-setup@v4
+    - uses: pnpm/action-setup@v6
       with:
-        version: 9
+        version: 11
 
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
         cache: pnpm
         node-version: "22"
