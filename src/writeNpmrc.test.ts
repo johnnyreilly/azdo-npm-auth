@@ -123,6 +123,60 @@ describe("mergeNpmrcContent", () => {
 
 		expect(result).toBe(updatedScopedBlock);
 	});
+
+	it("replaces matching auth block when existing content uses CRLF line endings", () => {
+		// Existing .npmrc with Windows-style CRLF line endings
+		const existingCRLF =
+			"; begin auth token\r\n" +
+			"//pkgs.dev.azure.com/johnnyreilly/_packaging/my-feed/npm/registry/:username=johnnyreilly\r\n" +
+			"//pkgs.dev.azure.com/johnnyreilly/_packaging/my-feed/npm/registry/:_password=dGVzdA==\r\n" +
+			"//pkgs.dev.azure.com/johnnyreilly/_packaging/my-feed/npm/registry/:email=test@example.com\r\n" +
+			"//pkgs.dev.azure.com/johnnyreilly/_packaging/my-feed/npm/:username=johnnyreilly\r\n" +
+			"//pkgs.dev.azure.com/johnnyreilly/_packaging/my-feed/npm/:_password=dGVzdA==\r\n" +
+			"//pkgs.dev.azure.com/johnnyreilly/_packaging/my-feed/npm/:email=test@example.com\r\n" +
+			"; end auth token\r\n";
+
+		const result = mergeNpmrcContent(existingCRLF, updatedAuthBlock);
+
+		// The new block (LF) replaces the old block (CRLF) in place
+		expect(result).toBe(updatedAuthBlock);
+	});
+
+	it("preserves non-auth content and appends when existing content uses CRLF line endings", () => {
+		const existingCRLF = "engine-strict=true\r\n";
+
+		const result = mergeNpmrcContent(existingCRLF, authBlock);
+
+		// CRLF is normalised to LF in the output
+		expect(result).toBe(`engine-strict=true\n\n${authBlock}`);
+	});
+
+	it("handles auth block at end of existing content without trailing newline", () => {
+		// A block without a trailing newline (e.g. file saved without final newline)
+		const authBlockNoTrailingNewline = authBlock.replace(/\n$/, "");
+
+		const result = mergeNpmrcContent(
+			authBlockNoTrailingNewline,
+			updatedAuthBlock,
+		);
+
+		// The block is replaced in place; result uses the new block (which has a trailing newline)
+		expect(result).toBe(updatedAuthBlock);
+	});
+
+	it("leaves unrecognised legacy-style auth blocks untouched and appends new block", () => {
+		// Some tools use '# begin auth token' instead of '; begin auth token'.
+		// These are not managed by azdo-npm-auth and must not be disturbed.
+		const legacyBlock =
+			"# begin auth token\n" +
+			"//registry.npmjs.org/:_authToken=legacy-token\n" +
+			"# end auth token\n";
+
+		const result = mergeNpmrcContent(legacyBlock, authBlock);
+
+		// Legacy block preserved; new block appended
+		expect(result).toBe(`${legacyBlock}\n${authBlock}`);
+	});
 });
 
 // ── writeNpmrc (integration, fs mocked) ─────────────────────────────────────

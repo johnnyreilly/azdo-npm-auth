@@ -20,17 +20,21 @@ export function mergeNpmrcContent(
 	existingContent: string,
 	newContent: string,
 ): string {
+	// Normalise Windows-style CRLF to LF so block extraction and string
+	// replacement work correctly regardless of the file's original line endings.
+	const existing = existingContent.replace(/\r\n/g, "\n");
+
 	const newBlocks = extractAuthBlocks(newContent);
 
 	if (newBlocks.length === 0) {
-		return existingContent;
+		return existing;
 	}
 
 	const remainingBlocks = [...newBlocks];
 
 	// Replace matching existing blocks with their updated counterparts.
-	const existingBlocks = extractAuthBlocks(existingContent);
-	let result = existingContent;
+	const existingBlocks = extractAuthBlocks(existing);
+	let result = existing;
 	for (const existingBlock of existingBlocks) {
 		const matchIndex = remainingBlocks.findIndex((newBlock) =>
 			blocksMatchSameRegistry(existingBlock, newBlock),
