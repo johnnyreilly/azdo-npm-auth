@@ -22,6 +22,6 @@ describe("projectNpmrcRegistry", () => {
 			projectNpmrcRegistry({
 				registry: "stuff",
 			}),
-		).toThrowError("Unable to extract information");
+		).toThrow("Unable to extract information");
 	});
 });

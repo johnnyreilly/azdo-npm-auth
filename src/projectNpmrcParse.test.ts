@@ -96,7 +96,7 @@ always-auth=true`);
 			projectNpmrcParse({
 				npmrcPath: "/home/john/code/github/azdo-npm-auth/.npmrc",
 			}),
-		).rejects.toThrowError("Unable to extract information from project .npmrc");
+		).rejects.toThrow("Unable to extract information from project .npmrc");
 	});
 });
 
@@ -134,7 +134,7 @@ always-auth=true`);
 	});
 
 	it("errors on invalid content", () => {
-		expect(() => parseNpmrcContent(`stuff`)).toThrowError(
+		expect(() => parseNpmrcContent(`stuff`)).toThrow(
 			"Unable to extract information from project .npmrc",
 		);
 	});
